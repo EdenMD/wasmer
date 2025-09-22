@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capacitor Web API Demo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Capacitor Web API Demo</h1>
+        <p id="status">Status: Ready</p>
+
+        <section>
+            <h2>Text-to-Speech (Web Speech API)</h2>
+            <input type="text" id="ttsInput" value="Hello, Capacitor world!" />
+            <button id="speakBtn">Speak</button>
+        </section>
+
+        <section>
+            <h2>File Download (Capacitor Filesystem Plugin)</h2>
+            <input type="text" id="downloadUrl" value="https://jsonplaceholder.typicode.com/todos/1" />
+            <input type="text" id="downloadFilename" value="my-download.json" />
+            <button id="downloadBtn">Download File</button>
+        </section>
+
+        <section>
+            <h2>Microphone (Web MediaDevices API)</h2>
+            <button id="startRecordBtn">Start Recording</button>
+            <button id="stopRecordBtn" disabled>Stop Recording</button>
+            <audio id="audioPlayback" controls></audio>
+        </section>
+
+        <section>
+            <h2>File Import (Standard HTML Input)</h2>
+            <input type="file" id="fileInput" />
+            <button id="selectFileBtn">Select File</button>
+            <pre id="fileContent"></pre>
+        </section>
+    </div>
+
+    <script src="capacitor.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
