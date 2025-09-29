@@ -18,25 +18,51 @@ jobs:
         run: vercel pull --yes --environment=production --token=${{ secrets.VercelToken }}
 
       - name: Deploy to Vercel
-        id: deploy
+        id: deploy_step
         run: |
-          # Deploy with alias and capture the full output
-          DEPLOY_OUTPUT=$(vercel deploy --prod --token=${{ secrets.VercelToken }} --yes --alias aneshain.vercel.app)
+          echo "Starting Vercel deployment..."
+          DEPLOY_OUTPUT=$(vercel deploy --prod --token=${{ secrets.VercelToken }} --yes 2>&1)
           echo "$DEPLOY_OUTPUT" # Log the full Vercel output for debugging
 
           # Extract the unique Vercel deployment URL (e.g., Production: https://...vercel.app)
           # Using \K to discard 'Production: ' and a lookahead for ' [Xs]' or end of line
           UNIQUE_DEPLOY_URL=$(echo "$DEPLOY_OUTPUT" | grep -oP 'Production: \Khttps://[^\s]+(?=\s\[\d+s\]$|$)' || echo "")
-          
-          # The desired alias URL (Vercel should assign this if available)
-          ALIAS_URL="https://aneshain.vercel.app"
 
+          if [ -z "$UNIQUE_DEPLOY_URL" ]; then
+            echo "Error: Could not extract unique Vercel deployment URL."
+            exit 1
+          fi
+
+          echo "Extracted Unique Deployment URL: $UNIQUE_DEPLOY_URL"
           echo "unique_url=$UNIQUE_DEPLOY_URL" >> $GITHUB_OUTPUT
-          echo "alias_url=$ALIAS_URL" >> $GITHUB_OUTPUT
-          echo "🚀 Deployment URL (Unique Vercel Hash): $UNIQUE_DEPLOY_URL"
-          echo "✨ Deployment URL (Alias Requested): $ALIAS_URL"
+          echo "🚀 Unique Vercel Deployment URL (for reference): $UNIQUE_DEPLOY_URL"
 
-      - name: Log Deployment URLs
+      - name: Set Alias to aneshain.vercel.app
+        id: alias_step
         run: |
-          echo "Live at (Unique): ${{ steps.deploy.outputs.unique_url }}"
-          echo "Live at (Alias): ${{ steps.deploy.outputs.alias_url }}"
+          UNIQUE_DEPLOY_URL="${{ steps.deploy_step.outputs.unique_url }}"
+          ALIAS_NAME="aneshain.vercel.app"
+
+          if [ -n "$UNIQUE_DEPLOY_URL" ]; then
+            echo "Attempting to set alias $ALIAS_NAME for deployment $UNIQUE_DEPLOY_URL"
+            ALIAS_SET_OUTPUT=$(vercel alias set "$UNIQUE_DEPLOY_URL" "$ALIAS_NAME" --token=${{ secrets.VercelToken }} 2>&1)
+            echo "$ALIAS_SET_OUTPUT" # Log the alias command output
+
+            if echo "$ALIAS_SET_OUTPUT" | grep -q "Assigned"; then
+              echo "Alias '$ALIAS_NAME' successfully assigned!"
+              echo "alias_url=https://$ALIAS_NAME" >> $GITHUB_OUTPUT
+            else
+              echo "Warning: Could not confirm alias '$ALIAS_NAME' was assigned. It might already be in use or there was an issue."
+              echo "alias_url=Not Assigned" >> $GITHUB_OUTPUT # Set a fallback output
+              # You might want to exit 1 here if alias setting is critical
+            fi
+          else
+            echo "Error: Unique Vercel Deployment URL not found from previous step. Cannot set alias."
+            echo "alias_url=Error" >> $GITHUB_OUTPUT # Set a fallback output
+            exit 1 # Exit if the unique URL is missing
+          fi
+
+      - name: Log Final Deployment URLs
+        run: |
+          echo "Live at (Unique Vercel URL): ${{ steps.deploy_step.outputs.unique_url }}"
+          echo "Live at (Requested Alias URL): ${{ steps.alias_step.outputs.alias_url }}"
