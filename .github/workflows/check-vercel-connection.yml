@@ -48,11 +48,14 @@ jobs:
             ALIAS_SET_OUTPUT=$(vercel alias set "$UNIQUE_DEPLOY_URL" "$ALIAS_NAME" --token=${{ secrets.VercelToken }} 2>&1)
             echo "$ALIAS_SET_OUTPUT" # Log the alias command output
 
-            if echo "$ALIAS_SET_OUTPUT" | grep -q "Assigned"; then
+            # Corrected check for Vercel's success message
+            if echo "$ALIAS_SET_OUTPUT" | grep -q "Success!"; then
               echo "Alias '$ALIAS_NAME' successfully assigned!"
               echo "alias_url=https://$ALIAS_NAME" >> $GITHUB_OUTPUT
             else
-              echo "Warning: Could not confirm alias '$ALIAS_NAME' was assigned. It might already be in use or there was an issue."
+              echo "Warning: Could not confirm alias '$ALIAS_NAME' was assigned. There might be an issue (e.g., alias taken, project configuration).
+              Full Vercel alias output for debugging:"
+              echo "$ALIAS_SET_OUTPUT"
               echo "alias_url=Not Assigned" >> $GITHUB_OUTPUT # Set a fallback output
               # You might want to exit 1 here if alias setting is critical
             fi
