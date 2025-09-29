@@ -1,9 +1,0 @@
-{
-  "appId": "com.example.mycapacitorapp",
-  "appName": "MyCapacitorApp",
-  "webDir": "www",
-  "bundledWebRuntime": false,
-  "server": {
-    "androidScheme": "https"
-  }
-}
