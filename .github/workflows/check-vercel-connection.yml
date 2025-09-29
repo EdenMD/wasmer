@@ -1,34 +1,28 @@
-name: Check Vercel Connection
+name: Deploy to Vercel
 
 on:
   push:
-    branches:
-      - main
-  workflow_dispatch:
+    branches: [ main ]
 
 jobs:
-  check-connection:
+  deploy:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
+      - name: Install Vercel CLI
+        run: npm install -g vercel
 
-    - name: Install Vercel CLI
-      run: npm install -g vercel
+      - name: Pull Vercel project (if exists)
+        run: vercel pull --yes --environment=production --token=${{ secrets.VercelToken }}
 
-    - name: Attempt Vercel Pull
-      env:
-        VERCEL_TOKEN: ${{ secrets.VercelToken }}
-      run: |
-        echo "Attempting to pull Vercel project configuration..."
-        if vercel pull --yes --token $VERCEL_TOKEN ; then
-          echo "Successfully pulled Vercel project configuration. Repository is likely connected to Vercel."
-        else
-          echo "Failed to pull Vercel project configuration. Repository might not be connected or VERCEL_TOKEN is invalid."
-          exit 1
-        fi
+      - name: Deploy to Vercel
+        id: deploy
+        run: |
+          DEPLOY_URL=$(vercel deploy --prod --token=${{ secrets.VercelToken }} --yes | grep -o 'https://[^\s]*')
+          echo "::set-output name=url::$DEPLOY_URL"
+          echo "🚀 Deployment URL: $DEPLOY_URL"
+
+      - name: Log Deployment URL
+        run: echo "Live at ${{ steps.deploy.outputs.url }}"
