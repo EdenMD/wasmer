@@ -3,6 +3,17 @@ name: Deploy to Vercel
 on:
   push:
     branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      vercel_project_name:
+        description: 'Optional: Custom Vercel Project Name (e.g., "my-short-site"). If left blank, uses existing linked project.'
+        required: false
+        type: string
+      deploy_to_production:
+        description: 'Deploy to Vercel production environment (true for main branch, false for preview)'
+        required: false
+        type: boolean
+        default: true
 
 jobs:
   deploy:
@@ -14,15 +25,56 @@ jobs:
       - name: Install Vercel CLI
         run: npm install -g vercel
 
-      - name: Pull Vercel project (if exists)
-        run: vercel pull --yes --environment=production --token=${{ secrets.VercelToken }}
+      # Set VERCEL_PROJECT_NAME environment variable if provided by workflow_dispatch input
+      # This dictates the base subdomain (e.g., my-short-site.vercel.app)
+      - name: Set Vercel Project Name (if provided)
+        if: github.event.inputs.vercel_project_name != ''
+        run: |
+          echo "VERCEL_PROJECT_NAME=${{ github.event.inputs.vercel_project_name }}" >> $GITHUB_ENV
 
       - name: Deploy to Vercel
-        id: deploy
+        id: deploy_step
+        env:
+          # Your Vercel token secret
+          VERCEL_TOKEN: ${{ secrets.VercelToken }}
+          # Optional: Your Vercel Organization ID (required if creating new projects non-interactively)
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }} # Set this in GitHub secrets if you create new projects frequently
         run: |
-          DEPLOY_URL=$(vercel deploy --prod --token=${{ secrets.VercelToken }} --yes | grep -o 'https://[^\s]*')
-          echo "::set-output name=url::$DEPLOY_URL"
+          # Determine if it's a production deploy
+          IS_PROD_DEPLOY=${{ github.event.inputs.deploy_to_production }}
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            IS_PROD_DEPLOY="true"
+          fi
+
+          DEPLOY_COMMAND="vercel deploy"
+
+          # Add --prod flag for production deployments
+          if [[ "$IS_PROD_DEPLOY" == "true" ]]; then
+            DEPLOY_COMMAND="$DEPLOY_COMMAND --prod"
+            echo "Deploying to production..."
+          else
+            echo "Deploying to preview..."
+          fi
+
+          # The VERCEL_PROJECT_NAME env var (set above) handles targeting a specific project by name.
+          # If that project doesn't exist, Vercel will attempt to create it (requires VERCEL_ORG_ID for non-interactive).
+
+          echo "Running command: $DEPLOY_COMMAND"
+
+          # Execute deployment and capture the URL using the recommended GITHUB_OUTPUT method
+          DEPLOY_OUTPUT=$($DEPLOY_COMMAND --yes)
+          echo "$DEPLOY_OUTPUT" # Log full output for debugging
+
+          # Extract the Production or Inspect URL
+          DEPLOY_URL=$(echo "$DEPLOY_OUTPUT" | grep -E 'Production:|Inspect:' | head -1 | awk '{print $2}')
+
+          if [[ -z "$DEPLOY_URL" ]]; then
+            echo "::error::Failed to extract deployment URL."
+            exit 1
+          fi
+
+          echo "url=$DEPLOY_URL" >> $GITHUB_OUTPUT
           echo "🚀 Deployment URL: $DEPLOY_URL"
 
       - name: Log Deployment URL
-        run: echo "Live at ${{ steps.deploy.outputs.url }}"
+        run: echo "Live at ${{ steps.deploy_step.outputs.url }}"
