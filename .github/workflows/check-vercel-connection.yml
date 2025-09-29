@@ -1,0 +1,34 @@
+name: Check Vercel Connection
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  check-connection:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: Install Vercel CLI
+      run: npm install -g vercel
+
+    - name: Attempt Vercel Pull
+      env:
+        VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      run: |
+        echo "Attempting to pull Vercel project configuration..."
+        if vercel pull --yes --token $VERCEL_TOKEN ; then
+          echo "Successfully pulled Vercel project configuration. Repository is likely connected to Vercel."
+        else
+          echo "Failed to pull Vercel project configuration. Repository might not be connected or VERCEL_TOKEN is invalid."
+          exit 1
+        fi
