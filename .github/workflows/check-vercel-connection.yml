@@ -23,7 +23,7 @@ jobs:
 
     - name: Attempt Vercel Pull
       env:
-        VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        VERCEL_TOKEN: ${{ secrets.VercelToken }}
       run: |
         echo "Attempting to pull Vercel project configuration..."
         if vercel pull --yes --token $VERCEL_TOKEN ; then
