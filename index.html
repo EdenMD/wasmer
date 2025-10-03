@@ -1,1 +1,294 @@
-b
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anesha AI - Your Intelligent Coding Assistant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Anesha AI Favicon: Using the custom SVG with the gradient -->
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3ClinearGradient id='aneshaGradient' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23F97316;' /%3E%3Cstop offset='100%25' style='stop-color:%23EC4899;' /%3E%3C/linearGradient%3E%3Cpath fill='url(%23aneshaGradient)' d='M50 0 L0 100 L20 100 L30 75 L70 75 L80 100 L100 100 Z M35 60 L50 25 L65 60 Z'/%3E%3C/svg%3E" type="image/svg+xml">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        .gradient-text {
+            background-image: linear-gradient(to right, #F97316, #EC4899); /* Orange to Pink */
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .gradient-bg {
+            background-image: linear-gradient(to right, #F97316, #EC4899);
+        }
+        .gradient-bg-hover:hover {
+            background-image: linear-gradient(to right, #EA580C, #DB2777); /* Darker Orange to Darker Pink */
+        }
+        /* Animations */
+        @keyframes rotate-360 {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        /* Apply to the robot icon now */
+        .logo-icon:hover {
+            animation: rotate-360 1s linear infinite;
+        }
+        .feature-icon-wrapper:hover .feature-icon {
+            transform: scale(1.1);
+            transition: transform 0.3s ease-in-out;
+        }
+        .faq-item {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1.5rem 0;
+        }
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+        .faq-question {
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.125rem; /* text-lg */
+            font-weight: 600; /* semibold */
+            color: #fff;
+        }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+            padding-top: 0;
+        }
+        .faq-answer.active {
+            max-height: 200px; /* Adjust as needed for content */
+            padding-top: 1rem;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-white">
+
+    <!-- Navigation Bar -->
+    <nav class="relative z-50 bg-slate-900/80 backdrop-blur-xl border-b border-orange-500/10 sticky top-0 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center space-x-2 sm:space-x-3">
+                    <div class="w-8 h-8 sm:w-10 sm:h-10 gradient-bg rounded-xl flex items-center justify-center">
+                        <!-- Font Awesome icon for Anesha logo -->
+                        <i class="fas fa-robot w-5 h-5 sm:w-6 sm:h-6 text-white logo-icon"></i>
+                    </div>
+                    <h1 class="text-xl sm:text-2xl lg:text-3xl font-bold gradient-text">Anesha AI</h1>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative z-10 pt-10 sm:pt-16 lg:pt-20 pb-16 sm:pb-24 lg:pb-32">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-1 text-center">
+                <div class="space-y-6 sm:space-y-8">
+                    <div class="space-y-4 sm:space-y-6">
+                        <h1 class="text-3xl sm:text-4xl lg:text-5xl xl:text-7xl font-bold leading-tight">
+                            <span class="block text-white">Your Co-Pilot for</span>
+                            <span class="block bg-gradient-to-r from-orange-400 via-pink-400 to-orange-300 bg-clip-text text-transparent">Seamless Coding</span>
+                            <span class="block text-white">and Project Management</span>
+                        </h1>
+                        <p class="text-base sm:text-lg lg:text-xl text-slate-300 leading-relaxed max-w-3xl mx-auto">
+                            Anesha is an intelligent AI assistant designed to streamline your development workflow. From code generation and refactoring to robust GitHub integration and direct file manipulation, Anesha empowers you to build faster and smarter.
+                            Whether you're a seasoned developer or just starting, Anesha adapts to your needs.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Capabilities Section -->
+    <section id="capabilities" class="relative z-10 py-16 sm:py-20 lg:py-24 bg-slate-900/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 sm:mb-16">
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6"><span class="gradient-text">What Anesha Can Do For You</span></h2>
+                <p class="text-base sm:text-lg lg:text-xl text-slate-300 max-w-3xl mx-auto">Anesha is more than just a code generator; she's a comprehensive development partner, ready to assist with a wide range of tasks.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                <!-- Capability 1: Code Generation & Refactoring -->
+                <div class="group relative"><div class="absolute inset-0 bg-gradient-to-r from-orange-500/10 to-pink-600/10 rounded-xl sm:rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div><div class="relative p-6 sm:p-8 bg-slate-900/50 backdrop-blur-sm rounded-xl sm:rounded-2xl border border-slate-700/50 group-hover:border-orange-500/30 transition-all duration-300"><div class="w-10 h-10 sm:w-12 sm:h-12 gradient-bg rounded-xl flex items-center justify-center mb-4 sm:mb-6 feature-icon-wrapper"><i class="fas fa-magic w-5 h-5 sm:w-6 sm:h-6 text-white feature-icon"></i></div><h3 class="text-lg sm:text-xl font-semibold text-white mb-3 sm:mb-4">Intelligent Code Generation & Refactoring</h3><p class="text-sm sm:text-base text-slate-400 leading-relaxed">Anesha can generate new code snippets, functions, or entire project structures based on your descriptions. She also excels at refactoring existing code, improving readability, performance, and adherence to best practices. Simply describe what you need, and she'll get to work.</p></div></div>
+                <!-- Capability 2: File System Management -->
+                <div class="group relative"><div class="absolute inset-0 bg-gradient-to-r from-orange-500/10 to-pink-600/10 rounded-xl sm:rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div><div class="relative p-6 sm:p-8 bg-slate-900/50 backdrop-blur-sm rounded-xl sm:rounded-2xl border border-slate-700/50 group-hover:border-orange-500/30 transition-all duration-300"><div class="w-10 h-10 sm:w-12 sm:h-12 gradient-bg rounded-xl flex items-center justify-center mb-4 sm:mb-6 feature-icon-wrapper"><i class="fas fa-folder-open w-5 h-5 sm:w-6 sm:h-6 text-white feature-icon"></i></div><h3 class="text-lg sm:text-xl font-semibold text-white mb-3 sm:mb-4">Direct File & Directory Operations</h3><p class="text-sm sm:text-base text-slate-400 leading-relaxed">
+                    Anesha interacts directly with your file system. Use commands like <code>create</code>, <code>update</code>, <code>delete</code> for files, <code>mkdir</code>, <code>rmdir</code> for directories, and <code>mvfile</code>, <code>mvdir</code> to move or rename. This allows for seamless project setup and organization without leaving the chat.
+                </p></div></div>
+                <!-- Capability 3: GitHub Integration -->
+                <div class="group relative"><div class="absolute inset-0 bg-gradient-to-r from-orange-500/10 to-pink-600/10 rounded-xl sm:rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div><div class="relative p-6 sm:p-8 bg-slate-900/50 backdrop-blur-sm rounded-xl sm:rounded-2xl border border-slate-700/50 group-hover:border-orange-500/30 transition-all duration-300"><div class="w-10 h-10 sm:w-12 sm:h-12 gradient-bg rounded-xl flex items-center justify-center mb-4 sm:mb-6 feature-icon-wrapper"><i class="fab fa-github w-5 h-5 sm:w-6 sm:h-6 text-white feature-icon"></i></div><h3 class="text-lg sm:text-xl font-semibold text-white mb-3 sm:mb-4">Comprehensive GitHub Management</h3><p class="text-sm sm:text-base text-slate-400 leading-relaxed">
+                    Integrate directly with your GitHub repositories. Anesha handles <code>github_push</code>, <code>github_pull</code>, creating/updating/deleting files/branches, creating pull requests (<code>github_create_pull_request</code>), listing repos (<code>github_list_repos</code>), and even managing workflow runs and logs (<code>github_get_workflow_logs</code>, <code>github_trigger_workflow</code>). She can also create/delete repositories and manage secrets.
+                </p></div></div>
+                <!-- Capability 4: Modular Code Management -->
+                <div class="group relative"><div class="absolute inset-0 bg-gradient-to-r from-orange-500/10 to-pink-600/10 rounded-xl sm:rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div><div class="relative p-6 sm:p-8 bg-slate-900/50 backdrop-blur-sm rounded-xl sm:rounded-2xl border border-slate-700/50 group-hover:border-orange-500/30 transition-all duration-300"><div class="w-10 h-10 sm:w-12 sm:h-12 gradient-bg rounded-xl flex items-center justify-center mb-4 sm:mb-6 feature-icon-wrapper"><i class="fas fa-cubes w-5 h-5 sm:w-6 sm:h-6 text-white feature-icon"></i></div><h3 class="text-lg sm:text-xl font-semibold text-white mb-3 sm:mb-4">Modular Code Block Updates</h3><p class="text-sm sm:text-base text-slate-400 leading-relaxed">
+                    For efficient refactoring, Anesha can mark specific sections of your code as logical blocks using <code>insert_code_markers</code>. Once marked, you can use <code>update_code_block</code> to modify only that specific block, ensuring minimal disruption and focused changes in larger files. This is ideal for managing complex projects.
+                </p></div></div>
+                <!-- Capability 5: Visual Rendering & UI/UX -->
+                <div class="group relative"><div class="absolute inset-0 bg-gradient-to-r from-orange-500/10 to-pink-600/10 rounded-xl sm:rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div><div class="relative p-6 sm:p-8 bg-slate-900/50 backdrop-blur-sm rounded-xl sm:rounded-2xl border border-slate-700/50 group-hover:border-orange-500/30 transition-all duration-300"><div class="w-10 h-10 sm:w-12 sm:h-12 gradient-bg rounded-xl flex items-center justify-center mb-4 sm:mb-6 feature-icon-wrapper"><i class="fas fa-paint-brush w-5 h-5 sm:w-6 sm:h-6 text-white feature-icon"></i></div><h3 class="text-lg sm:text-xl font-semibold text-white mb-3 sm:mb-4">Direct HTML Visualizations</h3><p class="text-sm sm:text-base text-slate-400 leading-relaxed">
+                    When you need to visualize data or concepts, Anesha can render HTML styled with CSS directly within the message bubble. This is perfect for charts, diagrams, math workings, or even simple UI mockups, providing immediate visual feedback for your ideas without needing a separate browser.
+                </p></div></div>
+                <!-- Capability 6: Full Project & Non-Coder Usability -->
+                <div class="group relative"><div class="absolute inset-0 bg-gradient-to-r from-orange-500/10 to-pink-600/10 rounded-xl sm:rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div><div class="relative p-6 sm:p-8 bg-slate-900/50 backdrop-blur-sm rounded-xl sm:rounded-2xl border border-slate-700/50 group-hover:border-orange-500/30 transition-all duration-300"><div class="w-10 h-10 sm:w-12 sm:h-12 gradient-bg rounded-xl flex items-center justify-center mb-4 sm:mb-6 feature-icon-wrapper"><i class="fas fa-rocket w-5 h-5 sm:w-6 sm:h-6 text-white feature-icon"></i></div><h3 class="text-lg sm:text-xl font-semibold text-white mb-3 sm:mb-4">Build Projects & Empower Non-Coders</h3><p class="text-sm sm:text-base text-slate-400 leading-relaxed">
+                    **Full Code Projects:** Yes! Anesha can create entire code projects if instructed with sufficient detail, managing multiple files and directories.
+                    **Non-Coders Welcome:** Absolutely. Anesha translates complex coding tasks into natural language interactions, making development accessible even to users with no prior coding experience. Your ideas, Anesha's execution.
+                </p></div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How Anesha Works Section -->
+    <section id="how-it-works" class="relative z-10 py-16 sm:py-20 lg:py-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 sm:mb-16">
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6"><span class="gradient-text">Your Workflow with Anesha in 3 Steps</span></h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12 relative">
+                <div class="relative text-center"><div class="relative inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 gradient-bg rounded-full text-white font-bold text-lg sm:text-xl mb-4 sm:mb-6 z-10">01</div><h3 class="text-lg sm:text-xl font-semibold text-white mb-3 sm:mb-4">Describe Your Need</h3><p class="text-sm sm:text-base text-slate-400 leading-relaxed">Simply tell Anesha what you want to achieve, whether it's generating code, refactoring a function, or managing a GitHub repository.</p></div>
+                <div class="relative text-center"><div class="relative inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 gradient-bg rounded-full text-white font-bold text-lg sm:text-xl mb-4 sm:mb-6 z-10">02</div><h3 class="text-lg sm:text-xl font-semibold text-white mb-3 sm:mb-4">Anesha Takes Action</h3><p class="text-sm sm:text-base text-slate-400 leading-relaxed">Anesha understands your request, utilizes her powerful commands, and performs the necessary file system or GitHub operations.</p></div>
+                <div class="relative text-center"><div class="relative inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 gradient-bg rounded-full text-white font-bold text-lg sm:text-xl mb-4 sm:mb-6 z-10">03</div><h3 class="text-lg sm:text-xl font-semibold text-white mb-3 sm:mb-4">Review & Iterate</h3><p class="text-sm sm:text-base text-slate-400 leading-relaxed">Review the changes Anesha has made or the code she's generated. Provide feedback for further refinements or new tasks.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="relative z-10 py-16 sm:py-20 lg:py-24 bg-slate-900/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 sm:mb-16">
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6"><span class="gradient-text">Frequently Asked Questions</span></h2>
+                <p class="text-base sm:text-lg lg:text-xl text-slate-300 max-w-3xl mx-auto">Find answers to common questions about Anesha AI and how she can assist you.</p>
+            </div>
+            <div class="max-w-4xl mx-auto">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>What exactly is Anesha AI?</span>
+                        <i class="fas fa-chevron-down text-orange-400"></i>
+                    </div>
+                    <div class="faq-answer text-slate-400">
+                        <p>Anesha is an intelligent AI assistant integrated into your code editor. She helps you with various coding tasks, including generating code, refactoring, managing files, and interacting with GitHub, all through natural language commands.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Can Anesha help me create a full code project?</span>
+                        <i class="fas fa-chevron-down text-orange-400"></i>
+                    </div>
+                    <div class="faq-answer text-slate-400">
+                        <p>Yes, absolutely! If you provide a detailed enough description of your project requirements, Anesha can generate the complete file structure, initial code, and even integrate boilerplate code for various frameworks. Just specify your vision.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Do I need to be an experienced coder to use Anesha?</span>
+                        <i class="fas fa-chevron-down text-orange-400"></i>
+                    </div>
+                    <div class="faq-answer text-slate-400">
+                        <p>Not at all! Anesha is designed to be user-friendly for both experienced developers and beginners. She translates your natural language requests into concrete coding actions, making development accessible regardless of your coding proficiency. Beginners can learn by observing her code, while pros can accelerate their workflow.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How does Anesha handle file and directory operations?</span>
+                        <i class="fas fa-chevron-down text-orange-400"></i>
+                    </div>
+                    <div class="faq-answer text-slate-400">
+                        <p>Anesha can directly perform file system operations. You can ask her to <code>create</code>, <code>update</code>, or <code>delete</code> files, <code>mkdir</code> (create directories), <code>rmdir</code> (remove directories), and <code>mvfile</code> or <code>mvdir</code> (move/rename files or directories). This gives you powerful control over your project structure.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>What kind of GitHub operations can Anesha perform?</span>
+                        <i class="fas fa-chevron-down text-orange-400"></i>
+                    </div>
+                    <div class="faq-answer text-slate-400">
+                        <p>Anesha offers extensive GitHub integration. She can <code>github_push</code> and <code>github_pull</code> changes, <code>github_create_file</code>, <code>github_update_file</code>, <code>github_delete_file</code>, create/delete branches (<code>github_create_branch</code>, <code>github_delete_branch</code>), create pull requests (<code>github_create_pull_request</code>), list your repositories (<code>github_list_repos</code>), and even interact with GitHub Actions workflows (<code>github_trigger_workflow</code>, <code>github_get_workflow_logs</code>, <code>github_get_latest_workflow_logs</code>, <code>github_get_workflow_runs</code>).</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Can Anesha help with code refactoring in large files?</span>
+                        <i class="fas fa-chevron-down text-orange-400"></i>
+                    </div>
+                    <div class="faq-answer text-slate-400">
+                        <p>Yes, Anesha supports modular code management. You can define specific sections of your code as logical blocks using <code>insert_code_markers</code>. Once marked, you can use <code>update_code_block</code> to modify only that block, making it much easier to refactor or update specific functionalities without affecting the rest of the file.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>What is the "Direct HTML Rendering" feature?</span>
+                        <i class="fas fa-chevron-down text-orange-400"></i>
+                    </div>
+                    <div class="faq-answer text-slate-400">
+                        <p>This unique feature allows Anesha to render HTML and CSS directly within your chat message bubble. It's incredibly useful for visually representing data like charts, diagrams, mathematical workings, or even quick UI mockups. This provides instant visual feedback without needing to open a browser or another tool.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="relative z-10 bg-slate-900/80 backdrop-blur-sm border-t border-slate-700/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8 sm:mb-12">
+                <div class="sm:col-span-2">
+                    <div class="flex items-center space-x-2 sm:space-x-3 mb-4 sm:mb-6">
+                        <div class="w-8 h-8 sm:w-10 sm:h-10 gradient-bg rounded-xl flex items-center justify-center">
+                           <i class="fas fa-robot w-5 h-5 sm:w-6 sm:h-6 text-white logo-icon"></i>
+                        </div>
+                        <h3 class="text-xl sm:text-2xl font-bold gradient-text">Anesha AI</h3>
+                    </div>
+                    <p class="text-sm sm:text-base text-slate-400 leading-relaxed max-w-md">Your intelligent co-pilot for coding projects, simplifying development from concept to deployment.</p>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold mb-3 sm:mb-4 text-sm sm:text-base">Quick Links</h4>
+                    <ul class="space-y-2 text-slate-400 text-sm sm:text-base">
+                        <li><a class="hover:text-orange-400 transition-colors" href="#">Home</a></li>
+                        <li><a class="hover:text-orange-400 transition-colors" href="#capabilities">Capabilities</a></li>
+                        <li><a class="hover:text-orange-400 transition-colors" href="#how-it-works">How it Works</a></li>
+                        <li><a class="hover:text-orange-400 transition-colors" href="#faq">FAQ</a></li>
+                    </ul>
+                </div>
+                <div id="support">
+                    <h4 class="text-white font-semibold mb-3 sm:mb-4 text-sm sm:text-base">Support</h4>
+                    <ul class="space-y-2 text-slate-400 text-sm sm:text-base">
+                        <li><a class="hover:text-orange-400 transition-colors" href="#">Documentation</a></li>
+                        <li><a class="hover:text-orange-400 transition-colors" href="#">Contact Us</a></li>
+                        <li><a class="hover:text-orange-400 transition-colors" href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mt-8 pt-8 border-t border-slate-700/50 text-center text-slate-500 text-xs sm:text-sm">© 2024 Anesha AI. All rights reserved.</div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const faqItems = document.querySelectorAll('.faq-item');
+
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question');
+                const answer = item.querySelector('.faq-answer');
+                const icon = question.querySelector('.fas');
+
+                question.addEventListener('click', () => {
+                    // Close other open answers
+                    faqItems.forEach(otherItem => {
+                        if (otherItem !== item) {
+                            otherItem.querySelector('.faq-answer').classList.remove('active');
+                            otherItem.querySelector('.fas').classList.replace('fa-chevron-up', 'fa-chevron-down');
+                        }
+                    });
+
+                    // Toggle current answer
+                    answer.classList.toggle('active');
+                    icon.classList.toggle('fa-chevron-down');
+                    icon.classList.toggle('fa-chevron-up');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
