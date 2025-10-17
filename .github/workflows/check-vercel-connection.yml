@@ -11,11 +11,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # NEW STEP: Unzip and locate project root
+      # NEW STEP: Unzip static site and find project root
       - name: Unzip static site and find project root
         id: unzip_project
         run: |
-          ZIP_FILE="static_site.zip" # <--- IMPORTANT: Update this if your zip file has a different name or path
+          ZIP_FILE="xbvercel.zip"
           UNZIP_DIR="vercel_output_temp"
           mkdir -p "$UNZIP_DIR"
           unzip "$ZIP_FILE" -d "$UNZIP_DIR"
