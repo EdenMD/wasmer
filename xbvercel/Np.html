@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gen1: New Project</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Montserrat:wght@400;500;600;700&family=Orbitron:wght@600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+    <style>
+     /* --- Root Variables (Light & Dark Theme - Remastered Gen1 Palette) --- */
+:root {
+    /* Light Theme Palette (if ever needed, focus is dark) */
+    --background-light: #F0F2F5;
+    --surface-light: #FFFFFF;
+    --card-light: #F8F9FA;
+    --text-dark: #333333;
+    --text-muted: #666666;
+    --accent-blue-light: #007BFF;
+    --accent-purple-light: #6F42C1;
+    --border-color-light: #D1D9E6;
+    --button-gradient-start-light: #007BFF;
+    --button-gradient-end-light: #6F42C1;
+    --shadow-color-light: rgba(0, 0, 0, 0.1);
+
+    /* Default (Dark Theme Inspired by GitHub/Modern Dashboards) */
+    --background: #1A1A1A; /* Darker base */
+    --surface: #222222; /* Slightly lighter than background for main areas */
+    --card: #2D2D2D; /* Card background */
+    --text-primary: #E0E0E0; /* Light text for readability */
+    --text-secondary: #A0A0A0; /* Muted text */
+    --border: #444444; /* Subtle borders */
+    --shadow: rgba(0, 0, 0, 0.5); /* Stronger shadow for depth */
+
+    /* Gen1 Specific Colors & Gradients for components (Dark Theme Defaults) */
+    --appbar-gradient: linear-gradient(to right, #00BFFF, #8A2BE2); /* Brighter, more vibrant gradient */
+    --main-accent: #00BFFF; /* Primary highlight color (Deep Sky Blue) */
+    --secondary-accent: #8A2BE2; /* Secondary highlight color (Blue Violet) */
+    --button-primary-gradient: linear-gradient(to right, #00BFFF, #8A2BE2);
+    --button-text-on-gradient: #FFFFFF; /* White text for buttons with gradients */
+
+    /* Component specific colors */
+    --delete-button-bg: #DC3545; /* Red */
+    --delete-button-hover-bg: #C82333;
+    --disabled-bg: #404040;
+    --disabled-text: #707070;
+    --error-color: #FF6B6B; /* Lighter red for errors */
+    --info-color: #6BE56B; /* Lighter green for info */
+    --snackbar-bg: #3A3A3A; /* Dark grey for snackbar background */
+    --snackbar-text: #FFFFFF; /* White text for snackbar */
+    --nav-active-bg: rgba(0, 191, 255, 0.15); /* Subtle background for active nav item */
+    --search-bg: #3A3A3A;
+    --search-text: #E0E0E0;
+    --search-border: #555555;
+    --filter-bg: #3A3A3A;
+    --filter-border: #555555;
+    --filter-text: #E0E0E0;
+    --filter-dropdown-bg: #4A4A4A;
+    --filter-dropdown-hover: #5A5A5A;
+}
+
+/* Light theme definition - for toggling, though dark is primary */
+body.light-theme {
+    --background: var(--background-light);
+    --surface: var(--surface-light);
+    --card: var(--card-light);
+    --text-primary: var(--text-dark);
+    --text-secondary: var(--text-muted);
+    --border: var(--border-color-light);
+    --shadow: var(--shadow-color-light);
+    --appbar-gradient: linear-gradient(to right, var(--button-gradient-start-light), var(--button-gradient-end-light));
+    --main-accent: var(--accent-blue-light);
+    --secondary-accent: var(--accent-purple-light);
+    --button-primary-gradient: linear-gradient(to right, var(--button-gradient-start-light), var(--button-gradient-end-light));
+    --button-text-on-gradient: #FFFFFF;
+    --delete-button-bg: #DC3545;
+    --delete-button-hover-bg: #C82333;
+    --disabled-bg: #E0E0E0;
+    --disabled-text: #A0A0A0;
+    --error-color: #DC3545;
+    --info-color: #28A745;
+    --snackbar-bg: #323232;
+    --snackbar-text: #FFFFFF;
+    --nav-active-bg: rgba(0, 123, 255, 0.1);
+    --search-bg: #EAEAEA;
+    --search-text: #333333;
+    --search-border: #CCCCCC;
+    --filter-bg: #EAEAEA;
+    --filter-border: #CCCCCC;
+    --filter-text: #333333;
+    --filter-dropdown-bg: #FFFFFF;
+    --filter-dropdown-hover: #F0F0F0;
+}
+
+/* Helper for RGB values (used for rgba calculations) */
+:root { --accent-blue-rgb: 0, 191, 255; } /* Dark theme default */
+body.light-theme { --accent-blue-rgb: 0, 123, 255; }
+
+/* --- Base Styles --- */
+html {
+    box-sizing: border-box;
+}
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+body {
+    font-family: 'Roboto', 'Montserrat', sans-serif;
+    background-color: var(--background); /* This will be covered by the pseudo-element and image */
+    color: var(--text-primary);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center content horizontally */
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.3s ease, color 0.3s ease;
+
+    /* Dark blurred background image for the entire page */
+    background-image: url('defluat-profile.png'); /* Placeholder, diversified */
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed; /* Ensures background stays fixed during scroll */
+    position: relative; /* Needed for z-index of ::before */
+}
+
+/* Pseudo-element for overlay and blur */
+body::before {
+    content: '';
+    position: fixed; /* Fixed to cover the entire viewport */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.65); /* Darker overlay for better text contrast */
+    backdrop-filter: blur(10px); /* More blur */
+    z-index: -1; /* Puts it behind the main content */
+    transition: background-color 0.3s ease, backdrop-filter 0.3s ease;
+}
+
+body.light-theme::before {
+    background-color: rgba(255, 255, 255, 0.65); /* Lighter overlay for light theme */
+}
+
+h1, h2, h3, h4 {
+    font-family: 'Orbitron', 'Roboto', sans-serif;
+    margin: 0;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+a {
+    color: var(--main-accent);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+a:hover {
+    color: var(--secondary-accent);
+    text-decoration: underline;
+}
+
+/* --- Header (similar to well.html header) --- */
+.main-header {
+    width: 100%;
+    background-color: rgba(34, 34, 34, 0.95); /* More opaque, but still semi-transparent */
+    backdrop-filter: blur(8px); /* More blur for the header itself */
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    padding: 12px 25px; /* Increased padding */
+    box-shadow: 0 2px 15px var(--shadow); /* Stronger shadow */
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    justify-content: space-between; /* Distribute items */
+}
+body.light-theme .main-header {
+    background-color: rgba(255, 255, 255, 0.95);
+}
+
+.main-header .back-button { /* Renamed from menu-toggle for Np.html */
+    font-size: 1.5em; /* Slightly larger */
+    cursor: pointer;
+    padding: 10px; /* Increased padding */
+    border-radius: 8px; /* Slightly more rounded */
+    transition: background-color 0.2s ease, color 0.2s ease;
+    color: var(--text-primary);
+    background: none;
+    border: none;
+}
+.main-header .back-button:hover {
+    background-color: rgba(var(--accent-blue-rgb), 0.1); /* Subtle accent hover, not a full gradient */
+    color: var(--main-accent);
+}
+body.light-theme .main-header .back-button:hover {
+    background-color: rgba(var(--accent-blue-rgb), 0.1);
+    color: var(--main-accent);
+}
+
+.main-header .app-title { /* Renamed from logo for Np.html */
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.8em; /* Larger title */
+    font-weight: 700;
+    flex-grow: 1; /* Allows title to center better */
+    text-align: center;
+    color: var(--main-accent);
+    text-shadow: 0 0 8px rgba(var(--accent-blue-rgb), 0.4);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0 20px; /* Adjust margin to ensure it doesn't overlap back button */
+}
+/* Counteract back button pushing title too far right for centering */
+.main-header .app-title + .header-actions {
+    margin-right: calc(1.5em + 20px + 10px); /* back-button width + padding + margin-left */
+    /* This is a tricky estimation. A flex-grow on the title often centers it if space allows. */
+}
+
+.main-header .header-actions {
+    display: flex;
+    gap: 15px; /* Increased gap */
+    align-items: center;
+}
+
+.main-header .action-button.header-icon-button { /* Specific class for header action buttons */
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    font-size: 1.3em; /* Larger icons */
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+.main-header .action-button.header-icon-button:hover {
+    background-color: rgba(var(--accent-blue-rgb), 0.1); /* Subtle accent hover */
+    color: var(--main-accent);
+}
+body.light-theme .main-header .action-button.header-icon-button:hover {
+    background-color: rgba(var(--accent-blue-rgb), 0.1);
+    color: var(--main-accent);
+}
+
+.theme-switch {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px; /* Larger switch */
+    height: 45px;
+    font-size: 1.3em;
+}
+.theme-switch i {
+    color: var(--text-primary);
+}
+.theme-switch span {
+    display: none;
+}
+
+
+/* --- Container for the Form --- */
+.form-container {
+    background-color: var(--surface);
+    box-shadow: 0 8px 25px var(--shadow); /* Stronger shadow */
+    border-radius: 15px; /* More rounded */
+    margin: 30px auto; /* Increased margin, auto for centering */
+    padding: 40px; /* Increased padding */
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 900px; /* Wider form container */
+    border: 1px solid var(--border);
+    transition: background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 30px; /* Increased gap between form groups */
+    z-index: 10; /* Ensure form is above body::before */
+    position: relative; /* Needed for z-index */
+}
+
+.section-title {
+    font-size: 2.2em; /* Larger title */
+    font-weight: 700;
+    color: var(--main-accent);
+    font-family: 'Orbitron', sans-serif;
+    text-shadow: 0 0 10px rgba(var(--accent-blue-rgb), 0.3);
+    margin-bottom: 10px; /* Space below title */
+    text-align: center;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* Increased gap */
+}
+
+.form-group label {
+    font-size: 1.15em; /* Slightly larger label */
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.form-group input[type="text"],
+.form-group textarea { /* Added textarea for README content */
+    padding: 14px 18px; /* More padding */
+    border: 1px solid var(--border);
+    border-radius: 8px; /* More rounded */
+    background-color: var(--card);
+    color: var(--text-primary);
+    font-size: 1em;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2); /* Stronger inset shadow */
+    resize: vertical; /* Allow vertical resizing for textarea */
+    min-height: 100px; /* Min height for README textarea */
+}
+
+body.light-theme .form-group input[type="text"],
+body.light-theme .form-group textarea {
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.form-group input[type="text"]:focus,
+.form-group textarea:focus {
+    border-color: var(--main-accent);
+    box-shadow: 0 0 0 3px rgba(var(--accent-blue-rgb), 0.3); /* Stronger focus glow */
+}
+
+.github-import-group {
+    display: flex;
+    gap: 15px; /* Increased gap */
+    align-items: center;
+    flex-wrap: wrap; /* Allow wrapping on small screens */
+}
+
+.github-import-group input {
+    flex-grow: 1;
+}
+
+.github-import-group button {
+    margin-top: 0; /* Override default button margin */
+}
+
+/* --- Custom File Upload Area (similar to well.html, enhanced) --- */
+.file-upload-area {
+    border: 2px dashed var(--border);
+    border-radius: 10px; /* More rounded */
+    padding: 30px; /* More padding */
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+    color: var(--text-secondary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px; /* Increased gap */
+    background-color: var(--card); /* Background for upload area */
+}
+
+.file-upload-area:hover {
+    background-color: rgba(var(--accent-blue-rgb), 0.08); /* Accent hover */
+    border-color: var(--main-accent);
+}
+
+.file-upload-area i {
+    font-size: 3em; /* Larger icon */
+    color: var(--main-accent);
+}
+
+.file-upload-area p {
+    margin: 0;
+    font-size: 1.05em; /* Slightly larger text */
+    font-weight: 500;
+}
+
+#fileInput {
+    display: none; /* Hide default file input */
+}
+
+/* --- Image Preview Area --- */
+#projectImagePreviewContainer {
+    margin-top: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 15px;
+    background-color: var(--card);
+}
+
+.image-preview-item {
+    position: relative;
+    width: 150px;
+    height: 100px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 8px var(--shadow);
+}
+.image-preview-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.image-preview-item .remove-image {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: var(--delete-button-bg);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.8em;
+    opacity: 0.8;
+    transition: opacity 0.2s ease, background-color 0.2s ease;
+}
+.image-preview-item .remove-image:hover {
+    opacity: 1;
+    background-color: var(--delete-button-hover-bg);
+}
+#projectImagePreviewContainer.hidden {
+    display: none;
+}
+
+
+/* --- File List (Uploaded Files) --- */
+.file-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 15px;
+    max-height: 200px; /* Taller list */
+    overflow-y: auto;
+    border: 1px solid var(--border);
+    border-radius: 10px; /* More rounded */
+    background-color: var(--card);
+    box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.2);
+}
+
+.file-list li {
+    padding: 10px 20px; /* More padding */
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.95em;
+    color: var(--text-primary);
+}
+
+.file-list li:last-child {
+    border-bottom: none;
+}
+
+.file-list .remove-file {
+    background: none;
+    border: none;
+    color: var(--delete-button-bg);
+    cursor: pointer;
+    font-size: 1.2em; /* Larger icon */
+    transition: color 0.2s ease, transform 0.2s ease;
+    padding: 5px;
+}
+
+.file-list .remove-file:hover {
+    color: var(--delete-button-hover-bg);
+    transform: scale(1.1);
+}
+
+.file-list.hidden {
+    display: none;
+}
+
+/* --- Checkbox for README --- */
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.checkbox-group input[type="checkbox"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--border);
+    border-radius: 6px;
+    background-color: var(--card);
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.checkbox-group input[type="checkbox"]:checked {
+    background-color: var(--main-accent);
+    border-color: var(--main-accent);
+    box-shadow: 0 0 0 3px rgba(var(--accent-blue-rgb), 0.3);
+}
+
+.checkbox-group input[type="checkbox"]:checked::after {
+    content: "\f00c"; /* Font Awesome check icon */
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    color: white;
+    font-size: 14px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.checkbox-group label {
+    font-size: 1.1em;
+    font-weight: 500;
+    color: var(--text-primary);
+    cursor: pointer;
+}
+
+
+/* --- Action Button (Create Project) --- */
+.action-button { /* This applies to primary action buttons, not header icons */
+    padding: 15px 30px; /* Larger padding */
+    border: none;
+    border-radius: 10px; /* More rounded */
+    background-image: var(--button-primary-gradient); /* Blue-purple gradient */
+    color: var(--button-text-on-gradient);
+    font-size: 1.2em; /* Larger text */
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    box-shadow: 0 8px 20px var(--shadow); /* Stronger shadow */
+    margin-top: 20px; /* More space above button */
+    display: block; /* Ensure it takes full width or allows alignment */
+    width: fit-content; /* Adjust to content width */
+    margin-left: auto; /* Center or align right */
+    margin-right: auto; /* Center or align left */
+}
+
+.action-button:hover:not(:disabled) {
+    transform: translateY(-3px); /* Lift more */
+    box-shadow: 0 12px 30px var(--shadow); /* Deeper shadow on hover */
+    opacity: 0.9;
+}
+
+.action-button:active:not(:disabled) {
+    transform: translateY(1px); /* Pressed state */
+    box-shadow: 0 4px 10px var(--shadow);
+}
+
+.action-button:disabled {
+    background-color: var(--disabled-bg);
+    background-image: none; /* Remove gradient when disabled */
+    color: var(--disabled-text);
+    cursor: not-allowed;
+    opacity: 0.6;
+    box-shadow: 0 2px 8px var(--shadow);
+}
+
+/* --- Snackbar for Status Messages (re-used from well.html) --- */
+.snackbar {
+    position: fixed;
+    bottom: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    min-width: 320px;
+    max-width: 650px;
+    background-color: var(--snackbar-bg);
+    color: var(--snackbar-text);
+    padding: 18px 28px;
+    border-radius: 8px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    font-size: 1em;
+    font-weight: 500;
+    z-index: 1100;
+    opacity: 0;
+    visibility: hidden;
+    transition: bottom 0.3s cubic-bezier(0.4, 0.0, 0.2, 1), opacity 0.3s ease, visibility 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.snackbar.show {
+    bottom: 35px;
+    opacity: 1;
+    visibility: visible;
+}
+
+.snackbar.success {
+    color: var(--info-color);
+}
+.snackbar.error {
+    color: var(--error-color);
+}
+.snackbar i {
+    font-size: 1.3em;
+    flex-shrink: 0;
+}
+.snackbar p {
+    margin: 0;
+    padding: 0;
+    flex-grow: 1;
+    text-align: left;
+}
+
+/* --- Responsive Design --- */
+@media (max-width: 900px) {
+    .form-container {
+        max-width: 700px;
+        padding: 30px;
+        margin: 20px auto;
+    }
+    .main-header .app-title {
+        font-size: 1.6em;
+    }
+    .form-group label {
+        font-size: 1.1em;
+    }
+    .form-group input[type="text"],
+    .form-group textarea {
+        padding: 12px 15px;
+        font-size: 0.95em;
+    }
+    .file-upload-area {
+        padding: 25px;
+    }
+    .file-upload-area i {
+        font-size: 2.5em;
+    }
+    .file-upload-area p {
+        font-size: 1em;
+    }
+    .file-list {
+        max-height: 180px;
+    }
+    .image-preview-item {
+        width: 120px;
+        height: 80px;
+    }
+}
+
+@media (max-width: 600px) {
+    .main-header {
+        padding: 10px 15px;
+        flex-wrap: wrap;
+    }
+    .main-header .back-button {
+        font-size: 1.4em;
+        padding: 8px;
+    }
+    .main-header .app-title {
+        font-size: 1.5em;
+        text-align: left; /* Allow title to flow */
+        flex-grow: 0;
+        margin-left: 10px;
+    }
+    .main-header .header-actions {
+        margin-left: auto;
+        gap: 10px;
+    }
+    .main-header .action-button.header-icon-button,
+    .theme-switch {
+        width: 38px;
+        height: 38px;
+        font-size: 1.2em;
+    }
+    .form-container {
+        padding: 25px;
+        margin: 15px;
+        gap: 20px;
+    }
+    .section-title {
+        font-size: 1.8em;
+        margin-bottom: 5px;
+    }
+    .form-group {
+        gap: 10px;
+    }
+    .form-group label {
+        font-size: 1em;
+    }
+    .form-group input[type="text"],
+    .form-group textarea {
+        padding: 10px 12px;
+        font-size: 0.9em;
+        min-height: 80px;
+    }
+    .github-import-group {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+    .file-upload-area {
+        padding: 20px;
+    }
+    .file-upload-area i {
+        font-size: 2em;
+    }
+    .file-upload-area p {
+        font-size: 0.9em;
+    }
+    .file-list {
+        max-height: 150px;
+    }
+    .file-list li {
+        padding: 8px 15px;
+        font-size: 0.85em;
+    }
+    .action-button {
+        padding: 12px 20px;
+        font-size: 1.05em;
+    }
+    .snackbar {
+        bottom: 20px;
+        left: 15px;
+        right: 15px;
+        transform: translateX(0);
+        max-width: none;
+        padding: 14px 20px;
+    }
+    .image-preview-item {
+        width: 100px;
+        height: 70px;
+    }
+}  
+    </style>
+</head>
+<body class="dark-theme">
+    <!-- Main Header (similar to well.html header) -->
+    <header class="main-header">
+        <button class="back-button action-button" id="backButton" title="Go Back">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+        <span class="app-title">New Project</span>
+        <div class="header-actions">
+            <button class="back-button action-button"  id="themeSwitch" title="Toggle theme">
+                <i class="fas fa-sun" id="lightIcon"></i>
+                <i class="fas fa-moon" id="moonIcon" style="display: none;"></i>
+                <span id="themeText" class="sr-only">Toggle Theme</span>
+            </button>
+        </div>
+    </header>
+
+    <div class="form-container">
+        <h2 class="section-title">Initiate New Project</h2>
+
+        <div class="form-group">
+            <label for="projectName">Project Name:</label>
+            <input type="text" id="projectName" placeholder="e.g., My Awesome App" required>
+        </div>
+
+        <div class="form-group">
+            <label for="projectDescription">Project Description (Optional):</label>
+            <textarea id="projectDescription" placeholder="A brief description of your project..."></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="githubRepoUrl">Import from GitHub Repository:</label>
+            <div class="github-import-group">
+                <input type="text" id="githubRepoUrl" placeholder="e.g., https://github.com/user/repo-name">
+                <button class="action-button" id="importGithubBtn">Import</button>
+            </div>
+            <p style="font-size: 0.85em; color: var(--text-secondary); margin-top: 5px;">Enter a public GitHub repository URL to import its files.</p>
+        </div>
+
+        <div class="form-group">
+            <label for="projectImageInput">Project Image (Optional):</label>
+            <div class="file-upload-area" id="projectImageUploadArea">
+                <input type="file" id="projectImageInput" accept="image/*">
+                <i class="fas fa-image"></i>
+                <p>Drag & Drop an image here, or Click to Browse</p>
+                <p>(.png, .jpg, .jpeg, .gif, .webp, .svg)</p>
+            </div>
+            <div id="projectImagePreviewContainer" class="hidden">
+                <!-- Image previews will be rendered here -->
+            </div>
+            <button class="action-button" id="clearImageBtn" style="background-image: none; background-color: var(--delete-button-bg); color: white; margin-top: 10px; display: none;">
+                <i class="fas fa-trash-alt"></i> Clear Image
+            </button>
+        </div>
+
+        <div class="form-group">
+            <label>Other Project Files (Optional):</label>
+            <div class="file-upload-area" id="otherFilesUploadArea">
+                <input type="file" id="otherFilesInput" multiple accept=".zip, text/html, text/css, application/javascript, image/*, .json, .txt, .md, audio/*, video/*">
+                <i class="fas fa-file-upload"></i>
+                <p>Drag & Drop files here, or Click to Browse</p>
+                <p>(.zip, .html, .css, .js, .json, images, audio, video etc.)</p>
+            </div>
+            <ul class="file-list hidden" id="fileList"></ul>
+        </div>
+
+        <div class="form-group">
+            <div class="checkbox-group">
+                <input type="checkbox" id="addReadmeCheckbox">
+                <label for="addReadmeCheckbox">Add a README.md file</label>
+            </div>
+            <textarea id="readmeContent" placeholder="Enter your README.md content here (Markdown supported)" style="display: none;"></textarea>
+        </div>
+
+        <button class="action-button" id="createProjectBtn">
+            <i class="fas fa-rocket"></i> Create Project
+        </button>
+
+        <!-- Snackbar for Status Messages (re-used from well.html) -->
+        <div class="snackbar" id="statusMessage" style="display: none;">
+            <i class="fas fa-info-circle"></i> <p>Status messages will appear here.</p>
+        </div>
+    </div>
+
+    <script>
+        const DB_NAME = 'Gen1DB';
+        const DB_VERSION = 1;
+        const PROJECTS_STORE_NAME = 'projects';
+        const FILES_STORE_NAME = 'projectFiles';
+        const CURRENT_PROJECT_ID_LS_KEY = 'gen1_current_project_id';
+        const THEME_STORAGE_KEY = 'gen1_theme';
+
+        const body = document.body;
+        const themeSwitch = document.getElementById('themeSwitch');
+        const lightIcon = document.getElementById('lightIcon');
+        const moonIcon = document.getElementById('moonIcon');
+        const themeText = document.getElementById('themeText');
+        const backButton = document.getElementById('backButton');
+
+        const projectNameInput = document.getElementById('projectName');
+        const projectDescriptionInput = document.getElementById('projectDescription'); // New
+        const githubRepoInput = document.getElementById('githubRepoUrl');
+        const importGithubBtn = document.getElementById('importGithubBtn');
+
+        const projectImageUploadArea = document.getElementById('projectImageUploadArea'); // New
+        const projectImageInput = document.getElementById('projectImageInput'); // New
+        const projectImagePreviewContainer = document.getElementById('projectImagePreviewContainer'); // New
+        const clearImageBtn = document.getElementById('clearImageBtn'); // New
+
+        const otherFilesUploadArea = document.getElementById('otherFilesUploadArea'); // New, renamed from fileUploadArea
+        const otherFilesInput = document.getElementById('otherFilesInput'); // New, renamed from fileInput
+        const fileList = document.getElementById('fileList');
+
+        const addReadmeCheckbox = document.getElementById('addReadmeCheckbox'); // New
+        const readmeContentTextarea = document.getElementById('readmeContent'); // New
+
+        const createProjectBtn = document.getElementById('createProjectBtn');
+        const statusMessage = document.getElementById('statusMessage');
+
+        let db;
+        let uploadedFilesMap = new Map(); // For other files
+        let projectImageBase64 = null; // For single project image
+        let statusTimeoutId;
+
+        // --- IndexedDB Functions ---
+        function openGen1DB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+                request.onupgradeneeded = (event) => {
+                    db = event.target.result;
+                    if (!db.objectStoreNames.contains(PROJECTS_STORE_NAME)) {
+                        db.createObjectStore(PROJECTS_STORE_NAME, { keyPath: 'id' });
+                    }
+                    if (!db.objectStoreNames.contains(FILES_STORE_NAME)) {
+                        db.createObjectStore(FILES_STORE_NAME, { keyPath: 'projectId' });
+                    }
+                    // showStatus('Database setup complete!', 'info'); // Commented out to reduce initial noise
+                };
+
+                request.onsuccess = (event) => {
+                    db = event.target.result;
+                    // showStatus('Database opened successfully.', 'info'); // Commented out to reduce initial noise
+                    resolve(db);
+                };
+
+                request.onerror = (event) => {
+                    console.error('IndexedDB error:', event.target.error);
+                    showStatus(`IndexedDB error: ${event.target.error.message}`, 'error');
+                    reject(event.target.error);
+                };
+            });
+        }
+
+        function getAllItemsFromStore(storeName) {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction([storeName], 'readonly');
+                const store = transaction.objectStore(storeName);
+                const request = store.getAll();
+
+                request.onsuccess = (event) => {
+                    resolve(event.target.result);
+                };
+
+                request.onerror = (event) => {
+                    reject(event.target.error);
+                };
+            });
+        }
+
+        // --- Theme Toggling (Copied from well.html) ---
+        function loadTheme() {
+            const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+            if (savedTheme === 'light') {
+                body.classList.remove('dark-theme');
+                body.classList.add('light-theme');
+                lightIcon.style.display = 'inline-block';
+                moonIcon.style.display = 'none';
+            } else { // Default or 'dark' saved theme
+                body.classList.add('dark-theme');
+                body.classList.remove('light-theme');
+                lightIcon.style.display = 'none';
+                moonIcon.style.display = 'inline-block';
+            }
+        }
+
+        function toggleTheme() {
+            if (body.classList.contains('dark-theme')) {
+                body.classList.remove('dark-theme');
+                body.classList.add('light-theme');
+                localStorage.setItem(THEME_STORAGE_KEY, 'light');
+                lightIcon.style.display = 'inline-block';
+                moonIcon.style.display = 'none';
+            } else {
+                body.classList.remove('light-theme');
+                body.classList.add('dark-theme');
+                localStorage.setItem(THEME_STORAGE_KEY, 'dark');
+                lightIcon.style.display = 'none';
+                moonIcon.style.display = 'inline-block';
+            }
+        }
+        themeSwitch.addEventListener('click', toggleTheme);
+
+        // --- Snackbar (Status Message) Display (Copied from well.html) ---
+        function showStatus(message, type = 'info', duration = 3000) {
+            clearTimeout(statusTimeoutId);
+            statusMessage.style.display = 'flex';
+            statusMessage.classList.remove('success', 'error'); // Reset classes
+            statusMessage.className = 'snackbar'; // Ensure base class is present
+            
+            let iconClass = 'fas fa-info-circle';
+            if (type === 'error') iconClass = 'fas fa-times-circle';
+            if (type === 'success') iconClass = 'fas fa-check-circle';
+
+            statusMessage.classList.add(type);
+            statusMessage.innerHTML = `<i class="${iconClass}"></i> <p>${message}</p>`;
+            statusMessage.classList.add('show');
+
+            statusTimeoutId = setTimeout(() => {
+                hideStatus();
+            }, duration);
+        }
+
+        function hideStatus() {
+            clearTimeout(statusTimeoutId);
+            statusMessage.classList.remove('show');
+        }
+
+        // --- Navigation ---
+        backButton.addEventListener('click', () => {
+            window.history.back(); // Go back to the previous page (well.html)
+        });
+
+        // --- File Handling Utilities ---
+        function getMimeType(filename) {
+            const ext = filename.slice(filename.lastIndexOf('.')).toLowerCase();
+            switch (ext) {
+                case '.html': return 'text/html';
+                case '.css': return 'text/css';
+                case '.js': return 'application/javascript';
+                case '.json': return 'application/json';
+                case '.txt': return 'text/plain';
+                case '.md': return 'text/markdown';
+                case '.svg': return 'image/svg+xml';
+                case '.png': return 'image/png';
+                case '.jpg': case '.jpeg': return 'image/jpeg';
+                case '.gif': return 'image/gif';
+                case '.webp': return 'image/webp';
+                case '.mp3': return 'audio/mpeg';
+                case '.wav': return 'audio/wav';
+                case '.mp4': return 'video/mp4';
+                case '.webm': return 'video/webm';
+                case '.zip': return 'application/zip';
+                default: return 'application/octet-stream';
+            }
+        }
+
+        function isTextFileByExtension(filename) {
+            const textExtensions = ['.html', '.css', '.js', '.json', '.txt', '.md', '.svg', '.xml', '.jsx', '.tsx', '.ts', '.py', '.jsonc', '.glsl'];
+            const ext = filename.slice(filename.lastIndexOf('.')).toLowerCase();
+            return textExtensions.includes(ext) || (!filename.includes('.') && filename.length > 0);
+        }
+
+        function blobToBase64(blob) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(blob);
+            });
+        }
+
+        async function readFileAsAppropriateContent(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onerror = (e) => reject(e);
+                if (file.type.startsWith('text/') || file.type.includes('json') || file.type.includes('javascript') || file.type.includes('xml') || file.type.includes('svg') || isTextFileByExtension(file.name)) {
+                    reader.onload = (e) => resolve(e.target.result);
+                    reader.readAsText(file);
+                } else {
+                    reader.onload = (e) => resolve(e.target.result);
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        // --- Project Image Handling ---
+        projectImageUploadArea.addEventListener('click', () => {
+            projectImageInput.click();
+        });
+
+        projectImageUploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            projectImageUploadArea.style.borderColor = getComputedStyle(document.documentElement).getPropertyValue('--main-accent');
+        });
+
+        projectImageUploadArea.addEventListener('dragleave', () => {
+            projectImageUploadArea.style.borderColor = getComputedStyle(document.documentElement).getPropertyValue('--border');
+        });
+
+        projectImageUploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            projectImageUploadArea.style.borderColor = getComputedStyle(document.documentElement).getPropertyValue('--border');
+            const files = e.dataTransfer.files;
+            if (files.length > 0 && files[0].type.startsWith('image/')) {
+                processProjectImage(files[0]);
+            } else {
+                showStatus('Please drop an image file.', 'error');
+            }
+        });
+
+        projectImageInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                processProjectImage(e.target.files[0]);
+            }
+        });
+
+        clearImageBtn.addEventListener('click', () => {
+            projectImageBase64 = null;
+            projectImageInput.value = '';
+            projectImagePreviewContainer.innerHTML = '';
+            projectImagePreviewContainer.classList.add('hidden');
+            clearImageBtn.style.display = 'none';
+            showStatus('Project image cleared.', 'info');
+        });
+
+        async function processProjectImage(file) {
+            hideStatus();
+            if (!file.type.startsWith('image/')) {
+                showStatus('Invalid file type. Please select an image.', 'error');
+                return;
+            }
+            if (file.size > 2 * 1024 * 1024) { // 2MB limit
+                showStatus('Image file is too large (max 2MB).', 'error');
+                return;
+            }
+            try {
+                projectImageBase64 = await readFileAsAppropriateContent(file); // Reads as Data URL
+                renderProjectImagePreview();
+                showStatus(`Image "${file.name}" selected as project image.`, 'success');
+            } catch (error) {
+                console.error('Error processing project image:', error);
+                showStatus(`Failed to process image: ${error.message}`, 'error');
+                projectImageBase64 = null;
+                renderProjectImagePreview();
+            }
+        }
+
+        function renderProjectImagePreview() {
+            projectImagePreviewContainer.innerHTML = '';
+            if (projectImageBase64) {
+                const previewItem = document.createElement('div');
+                previewItem.classList.add('image-preview-item');
+                previewItem.innerHTML = `<img src="${projectImageBase64}" alt="Project Image"><button class="remove-image"><i class="fas fa-times"></i></button>`;
+                previewItem.querySelector('.remove-image').addEventListener('click', clearImageBtn.click); // Re-use clear button logic
+                projectImagePreviewContainer.appendChild(previewItem);
+                projectImagePreviewContainer.classList.remove('hidden');
+                clearImageBtn.style.display = 'block';
+            } else {
+                projectImagePreviewContainer.classList.add('hidden');
+                clearImageBtn.style.display = 'none';
+            }
+        }
+
+        // --- Other Project Files Handling ---
+        otherFilesUploadArea.addEventListener('click', () => {
+            otherFilesInput.click();
+        });
+
+        otherFilesUploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            otherFilesUploadArea.style.borderColor = getComputedStyle(document.documentElement).getPropertyValue('--main-accent');
+        });
+
+        otherFilesUploadArea.addEventListener('dragleave', () => {
+            otherFilesUploadArea.style.borderColor = getComputedStyle(document.documentElement).getPropertyValue('--border');
+        });
+
+        otherFilesUploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            otherFilesUploadArea.style.borderColor = getComputedStyle(document.documentElement).getPropertyValue('--border');
+            processOtherFiles(e.dataTransfer.files);
+        });
+
+        otherFilesInput.addEventListener('change', (e) => {
+            processOtherFiles(e.target.files);
+        });
+
+        async function processOtherFiles(files) {
+            if (files.length === 0) return;
+            hideStatus();
+            const fileArray = Array.from(files);
+            const zipFile = fileArray.find(file => file.name.endsWith('.zip'));
+
+            if (zipFile) {
+                if (fileArray.length > 1) {
+                    showStatus('Warning: A .zip file was detected. Only the zip file will be processed. Other files will be ignored.', 'error');
+                }
+                await processZipFile(zipFile);
+            } else {
+                await processIndividualOtherFiles(fileArray);
+            }
+            otherFilesInput.value = ''; // Clear input for next selection
+        }
+
+        async function processZipFile(zipFile) {
+            showStatus('Processing zip file...', 'info');
+            uploadedFilesMap.clear();
+            fileList.innerHTML = '';
+            createProjectBtn.disabled = true;
+            try {
+                const zip = await JSZip.loadAsync(zipFile);
+                let filesInZipCount = 0;
+                for (const relativePath in zip.files) {
+                    const zipEntry = zip.files[relativePath];
+                    if (!zipEntry.dir) {
+                        const filename = zipEntry.name;
+                        let content;
+                        if (isTextFileByExtension(filename)) {
+                            content = await zipEntry.async('text');
+                        } else {
+                            const arrayBuffer = await zipEntry.async('arraybuffer');
+                            const blob = new Blob([arrayBuffer], { type: getMimeType(filename) });
+                            content = await blobToBase64(blob);
+                        }
+                        uploadedFilesMap.set(filename, content);
+                        filesInZipCount++;
+                    }
+                }
+
+                if (filesInZipCount === 0) {
+                    showStatus('The selected zip file contains no readable files or supported formats.', 'error');
+                    fileList.classList.add('hidden');
+                    return;
+                }
+                showStatus(`Zip file "${zipFile.name}" processed. Found ${filesInZipCount} files.`, 'success');
+                renderOtherFileList();
+            } catch (error) {
+                console.error('Error processing zip file:', error);
+                showStatus(`Failed to process zip file: ${error.message}. Please ensure it's a valid zip.`, 'error');
+                uploadedFilesMap.clear();
+                fileList.classList.add('hidden');
+            } finally {
+                createProjectBtn.disabled = false;
+            }
+        }
+
+        async function processIndividualOtherFiles(files) {
+            let filesAddedCount = 0;
+            for (const file of files) {
+                if (file.name.endsWith('.zip')) {
+                    continue; // Skip zip files in individual processing
+                }
+                try {
+                    const content = await readFileAsAppropriateContent(file);
+                    uploadedFilesMap.set(file.name, content);
+                    filesAddedCount++;
+                } catch (error) {
+                    console.error(`Failed to read file ${file.name}:`, error);
+                    showStatus(`Failed to read "${file.name}". It might be too large or an unsupported format.`, 'error');
+                }
+            }
+            if (filesAddedCount > 0) {
+                showStatus(`Added ${filesAddedCount} individual file(s).`, 'success');
+            }
+            renderOtherFileList();
+        }
+
+        function renderOtherFileList() {
+            fileList.innerHTML = '';
+            if (uploadedFilesMap.size === 0) {
+                fileList.classList.add('hidden');
+                return;
+            }
+
+            uploadedFilesMap.forEach((content, filename) => {
+                const li = document.createElement('li');
+                li.innerHTML = `<span>${filename}</span><button class="remove-file" data-filename="${filename}"><i class="fas fa-times"></i></button>`;
+                fileList.appendChild(li);
+            });
+
+            fileList.classList.remove('hidden');
+
+            fileList.querySelectorAll('.remove-file').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const filenameToRemove = e.currentTarget.dataset.filename;
+                    uploadedFilesMap.delete(filenameToRemove);
+                    renderOtherFileList();
+                    showStatus(`Removed "${filenameToRemove}".`, 'info');
+                });
+            });
+        }
+
+        // --- GitHub Import ---
+        importGithubBtn.addEventListener('click', async () => {
+            hideStatus();
+            const repoUrl = githubRepoInput.value.trim();
+            if (!repoUrl) {
+                showStatus('Please enter a GitHub repository URL.', 'error');
+                return;
+            }
+
+            const match = repoUrl.match(/github\.com\/([^\/]+)\/([^\/]+)(?:\.git)?/);
+            if (!match) {
+                showStatus('Invalid GitHub repository URL format. Expected: github.com/user/repo-name', 'error');
+                return;
+            }
+
+            const owner = match[1];
+            const repoName = match[2];
+
+            showStatus(`Attempting to import ${owner}/${repoName} from GitHub...`, 'info');
+            createProjectBtn.disabled = true;
+            importGithubBtn.disabled = true;
+            uploadedFilesMap.clear();
+            fileList.innerHTML = '';
+
+            try {
+                const repoApiUrl = `https://api.github.com/repos/${owner}/${repoName}`;
+                const repoResponse = await fetch(repoApiUrl);
+                if (!repoResponse.ok) {
+                    if (repoResponse.status === 404) {
+                        throw new Error('Repository not found. Please check the URL and ensure it\'s public.');
+                    }
+                    throw new Error(`Failed to get repository info: ${repoResponse.status} ${repoResponse.statusText}`);
+                }
+                const repoData = await repoResponse.json();
+                const defaultBranch = repoData.default_branch || 'main';
+
+                const treeApiUrl = `https://api.github.com/repos/${owner}/${repoName}/git/trees/${defaultBranch}?recursive=1`;
+                const treeResponse = await fetch(treeApiUrl);
+                if (!treeResponse.ok) {
+                    if (treeResponse.status === 404) {
+                        throw new Error(`Default branch '${defaultBranch}' not found or repository is empty.`);
+                    }
+                    throw new Error(`Failed to get repository tree for branch '${defaultBranch}': ${treeResponse.status} ${treeResponse.statusText}`);
+                }
+                const treeData = await treeResponse.json();
+
+                if (!treeData.tree || treeData.tree.length === 0) {
+                    showStatus('No files found in the GitHub repository.', 'error');
+                    fileList.classList.add('hidden');
+                    return;
+                }
+
+                let filesImportedCount = 0;
+                for (const item of treeData.tree) {
+                    if (item.type === 'blob') {
+                        const filePath = item.path;
+                        const rawUrl = `https://raw.githubusercontent.com/${owner}/${repoName}/${defaultBranch}/${filePath}`;
+                        try {
+                            const fileResponse = await fetch(rawUrl);
+                            if (!fileResponse.ok) {
+                                console.warn(`Could not fetch ${filePath}: ${fileResponse.status} ${fileResponse.statusText}`);
+                                showStatus(`Warning: Could not fetch ${filePath}`, 'info');
+                                continue;
+                            }
+
+                            let content;
+                            const contentType = fileResponse.headers.get('Content-Type');
+                            if (contentType && (contentType.startsWith('text/') || contentType.includes('json') || contentType.includes('javascript') || contentType.includes('xml') || contentType.includes('svg'))) {
+                                content = await fileResponse.text();
+                            } else if (isTextFileByExtension(filePath)) {
+                                content = await fileResponse.text();
+                            } else {
+                                const blob = await fileResponse.blob();
+                                content = await blobToBase64(blob);
+                            }
+                            uploadedFilesMap.set(filePath, content);
+                            filesImportedCount++;
+                        } catch (fileFetchError) {
+                            console.error(`Error fetching raw file ${filePath}:`, fileFetchError);
+                            showStatus(`Error fetching: ${filePath}. ${fileFetchError.message}`, 'error');
+                        }
+                    }
+                }
+
+                if (filesImportedCount === 0) {
+                    showStatus('No readable files found in the GitHub repository after processing.', 'error');
+                    fileList.classList.add('hidden');
+                    return;
+                }
+                showStatus(`Successfully imported ${filesImportedCount} files from GitHub repository.`, 'success');
+                renderOtherFileList();
+            } catch (error) {
+                console.error('GitHub import error:', error);
+                showStatus(`Error importing GitHub repository: ${error.message}. Please try again.`, 'error');
+                uploadedFilesMap.clear();
+                fileList.classList.add('hidden');
+            } finally {
+                createProjectBtn.disabled = false;
+                importGithubBtn.disabled = false;
+            }
+        });
+
+        // --- README Checkbox Logic ---
+        addReadmeCheckbox.addEventListener('change', () => {
+            if (addReadmeCheckbox.checked) {
+                readmeContentTextarea.style.display = 'block';
+                readmeContentTextarea.value = `# ${projectNameInput.value.trim() || 'My New Project'}\n\nA brief description of this project.`;
+                readmeContentTextarea.focus();
+            } else {
+                readmeContentTextarea.style.display = 'none';
+            }
+        });
+
+        // --- Create Project Button ---
+        createProjectBtn.addEventListener('click', async () => {
+            hideStatus();
+            const projectName = projectNameInput.value.trim();
+            const projectDescription = projectDescriptionInput.value.trim();
+            const readmeContent = readmeContentTextarea.value.trim();
+            const hasReadme = addReadmeCheckbox.checked;
+
+            if (!projectName) {
+                showStatus('Project name cannot be empty.', 'error');
+                return;
+            }
+
+            if (!db) {
+                await openGen1DB();
+            }
+
+            try {
+                const allProjects = await getAllItemsFromStore(PROJECTS_STORE_NAME);
+                if (allProjects.some(p => p.name.toLowerCase() === projectName.toLowerCase())) {
+                    showStatus('A project with this name already exists. Please choose a different name.', 'error');
+                    return;
+                }
+
+                showStatus('Creating project in database...', 'info');
+                const newProjectId = `proj_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+                
+                const newProjectMetadata = {
+                    id: newProjectId,
+                    name: projectName,
+                    description: projectDescription, // Save description
+                    createdAt: new Date().toISOString(),
+                    imageUrl: projectImageBase64, // Save project image
+                    hasReadme: hasReadme // Save readme flag
+                };
+
+                const projectFilesContent = {};
+                uploadedFilesMap.forEach((content, filename) => {
+                    projectFilesContent[filename] = content;
+                });
+
+                if (hasReadme && readmeContent) {
+                    projectFilesContent['README.md'] = readmeContent;
+                }
+
+                const newProjectFiles = {
+                    projectId: newProjectId,
+                    files: projectFilesContent
+                };
+
+                const transaction = db.transaction([PROJECTS_STORE_NAME, FILES_STORE_NAME], 'readwrite');
+                const projectsStore = transaction.objectStore(PROJECTS_STORE_NAME);
+                const filesStore = transaction.objectStore(FILES_STORE_NAME);
+
+                await Promise.all([
+                    new Promise((resolve, reject) => {
+                        const req1 = projectsStore.add(newProjectMetadata);
+                        req1.onsuccess = () => resolve();
+                        req1.onerror = (e) => reject(e.target.error);
+                    }),
+                    new Promise((resolve, reject) => {
+                        const req2 = filesStore.add(newProjectFiles);
+                        req2.onsuccess = () => resolve();
+                        req2.onerror = (e) => reject(e.target.error);
+                    })
+                ]);
+
+                await new Promise((resolve, reject) => {
+                    transaction.oncomplete = () => resolve();
+                    transaction.onerror = (e) => reject(e.target.error);
+                });
+
+                localStorage.setItem(CURRENT_PROJECT_ID_LS_KEY, newProjectId);
+                const successMessage = (uploadedFilesMap.size > 0 || hasReadme || projectImageBase64) ? 'Project created successfully! Redirecting...' : 'Blank project created successfully! Redirecting...';
+                showStatus(successMessage, 'success');
+                setTimeout(() => { window.location.href = 'Pe.html'; }, 1500);
+
+            } catch (error) {
+                console.error('Error creating project:', error);
+                showStatus(`Failed to create project: ${error.message}. Please try again.`, 'error');
+            }
+        });
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', async () => {
+            loadTheme();
+            await openGen1DB();
+
+            // Populate project name if user previously typed one
+            projectNameInput.value = localStorage.getItem('gen1_temp_project_name') || '';
+            projectNameInput.addEventListener('input', () => {
+                localStorage.setItem('gen1_temp_project_name', projectNameInput.value);
+            });
+            
+            // Set default README content if checkbox is checked
+            addReadmeCheckbox.dispatchEvent(new Event('change'));
+        });
+
+        // Prevent default drag/drop behavior for the entire document
+        document.addEventListener('dragover', (e) => e.preventDefault());
+        document.addEventListener('drop', (e) => e.preventDefault());
+    </script>
+</body>
+</html>
