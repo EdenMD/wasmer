@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gen1: Project Editor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        var require = { paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.48.0/min/vs' } };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.48.0/min/vs/loader.js"></script>
+
+    <!-- Prettier CDN -->
+    <script src="https://unpkg.com/prettier@3.2.5/standalone.js"></script>
+    <script src="https://unpkg.com/prettier@3.2.5/parser-babel.js"></script>
+    <script src="https://unpkg.com/prettier@3.2.5/parser-html.js"></script>
+    <script src="https://unpkg.com/prettier@3.2.5/parser-css.js"></script>
+    <script src="https://unpkg.com/prettier@3.2.5/parser-markdown.js"></script>
+    <script src="https://unpkg.com/prettier@3.2.5/parser-json.js"></script>
+    <script src="https://unpkg.com/prettier@3.2.5/parser-yaml.js"></script>
+    <script src="https://unpkg.com/prettier@3.2.5/parser-glimmer.js"></script>
+    <script src="https://unpkg.com/prettier@3.2.5/parser-graphql.js"></script>
+    <script src="https://unpkg.com/prettier@3.2.5/parser-postcss.js"></script>
+
+    <!-- JavaScript Obfuscator CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/javascript-obfuscator@2.20.1/dist/javascript-obfuscator.min.js"></script>
+
+    <!-- Document Generation Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://unpkg.com/docx@latest/build/index.js"></script> <!-- docx.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pptxgenjs/3.11.0/pptxgen.min.js"></script>
+
+    <link rel="stylesheet" href="styles/pe.css">
+
+</head>
+<body>
+    <div class="top-bar">
+        <button class="button" id="backButton" title="Go back to projects">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+        <h1 class="project-title" id="projectTitle">Loading Project...</h1>
+        <button class="button" id="themeToggleButton" title="Toggle Theme">
+            <i class="fas fa-moon"></i>
+        </button>
+        <button class="button" id="runButton" title="View Preview" style="display: none;">
+            <i class="fas fa-play"></i>
+            <span>Run</span>
+        </button>
+        <button class="button" id="drawerButton" title="Open file explorer">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+
+    <div class="main-content-wrapper">
+        <div id="editor-container"></div>
+        <!-- Document and Image Preview Area -->
+        <div id="document-preview" class="document-preview"></div>
+
+        <!-- Document specific toolbar, shown when appropriate (document JSON or image/pdf preview active) -->
+        <div id="docToolbar" class="document-toolbar">
+            <button class="button" id="generateDownloadButton" title="Generate and Download Document" style="display: none;">
+                <i class="fas fa-file-export"></i>
+                <span>Generate & Download</span>
+            </button>
+            <button class="button" id="closePreviewButton" title="Close Preview / Return to Editor">
+                <i class="fas fa-times-circle"></i>
+                <span>Close Preview</span>
+            </button>
+        </div>
+
+
+        <div class="file-drawer" id="fileDrawer">
+            <div class="file-drawer-header">
+                <h3>Project Files</h3>
+                <div class="file-actions">
+                    <button class="icon-button" id="newFileButton" title="New File"><i class="fas fa-file-alt"></i></button>
+                    <button class="icon-button" id="newFolderButton" title="New Folder"><i class="fas fa-folder-plus"></i></button>
+                    <button class="icon-button" id="createDocumentButton" title="Create Document"><i class="fas fa-file-circle-plus"></i></button>
+                    <button class="icon-button" id="uploadFileButton" title="Upload File"><i class="fas fa-upload"></i></button>
+                    <input type="file" id="fileInput" multiple>
+                </div>
+            </div>
+            <ul class="file-list-drawer" id="fileListDrawer">
+            </ul>
+        </div>
+        <div class="drawer-overlay" id="drawerOverlay"></div>
+    </div>
+
+    <div class="bottom-nav">
+        <button class="nav-button" id="aiButton">
+            <i class="fas fa-robot"></i>
+            <span>AI Assist</span>
+        </button>
+        <button class="nav-button" id="formatterButton">
+            <i class="fas fa-magic"></i>
+            <span>Format Code</span>
+        </button>
+        <button class="nav-button" id="obfuscateButton">
+            <i class="fas fa-mask"></i>
+            <span>Obfuscate JS</span>
+        </button>
+        <button class="nav-button" id="saveButton">
+            <i class="fas fa-save"></i>
+            <span>Save File</span>
+        </button>
+        <button class="nav-button" id="copyCodeButton">
+            <i class="fas fa-copy"></i>
+            <span>Copy Code</span>
+        </button>
+        <button class="nav-button" id="howToUseButton">
+            <i class="fas fa-question-circle"></i>
+            <span>How To Use</span>
+        </button>
+    </div>
+
+    <div class="status-message" id="statusMessage">
+        <i class="fas fa-info-circle"></i> <p>Working...</p>
+    </div>
+
+    <!-- Generic Modal (existing) -->
+    <div class="modal-overlay" id="genericModal">
+        <div class="modal-content">
+            <h4 id="modalTitle"></h4>
+            <p id="modalMessage"></p>
+            <input type="text" id="modalInput">
+            <div class="modal-buttons">
+                <button class="confirm-button" id="modalConfirm">OK</button>
+                <button class="cancel-button" id="modalCancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Document Creation Modal (IDs fixed) -->
+    <div class="modal-overlay" id="createDocumentModal">
+        <div class="modal-content">
+            <h4>Create New Document</h4>
+            <p>Select document type and enter file name:</p>
+            <select id="docTypeSelect"> <!-- ID Fixed -->
+                <option value="pdf">PDF (.pdf)</option>
+                <option value="docx">Word Document (.docx)</option>
+                <option value="xlsx">Excel Workbook (.xlsx)</option>
+                <option value="pptx">PowerPoint Presentation (.pptx)</option>
+            </select>
+            <input type="text" id="docNameInput" placeholder="my-document"> <!-- ID Fixed -->
+            <div class="modal-buttons">
+                <button class="confirm-button" id="docCreateConfirm">Create</button> <!-- ID Fixed -->
+                <button class="cancel-button" id="docCreateCancel">Cancel</button> <!-- ID Fixed -->
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts/pe.js"></script>
+
+</body>
+</html>
