@@ -1,3 +1,4 @@
+```javascript
 function generateSimplifiedFileTreeForAI() {
     const root = { name: '', type: 'folder', children: [], path: '' };
     const allPaths = Object.keys(projectFilesData).filter(p => p !== CONVERSATION_FILENAME);
