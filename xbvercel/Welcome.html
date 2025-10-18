@@ -1,0 +1,1554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gen1: Xbuilder Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Montserrat:wght@400;500;600;700&family=Orbitron:wght@600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- Root Variables (Light & Dark Theme - Remastered Gen1 Palette) --- */
+        :root {
+            /* Light Theme Palette (if ever needed, focus is dark) */
+            --background-light: #F0F2F5;
+            --surface-light: #FFFFFF;
+            --card-light: #F8F9FA;
+            --text-dark: #333333;
+            --text-muted: #666666;
+            --accent-blue-light: #007BFF;
+            --accent-purple-light: #6F42C1;
+            --border-color-light: #D1D9E6;
+            --button-gradient-start-light: #007BFF;
+            --button-gradient-end-light: #6F42C1;
+            --shadow-color-light: rgba(0, 0, 0, 0.1);
+
+            /* Default (Dark Theme Inspired by GitHub/Modern Dashboards) */
+            --background: #1A1A1A; /* Darker base */
+            --surface: #222222; /* Slightly lighter than background for main areas */
+            --card: #2D2D2D; /* Card background */
+            --text-primary: #E0E0E0; /* Light text for readability */
+            --text-secondary: #A0A0A0; /* Muted text */
+            --border: #444444; /* Subtle borders */
+            --shadow: rgba(0, 0, 0, 0.5); /* Stronger shadow for depth */
+
+            /* Gen1 Specific Colors & Gradients for components (Dark Theme Defaults) */
+            --appbar-gradient: linear-gradient(to right, #00BFFF, #8A2BE2); /* Brighter, more vibrant gradient */
+            --main-accent: #00BFFF; /* Primary highlight color (Deep Sky Blue) */
+            --secondary-accent: #8A2BE2; /* Secondary highlight color (Blue Violet) */
+            --button-primary-gradient: linear-gradient(to right, #00BFFF, #8A2BE2);
+            --button-text-on-gradient: #FFFFFF; /* White text for buttons with gradients */
+
+            /* Component specific colors */
+            --delete-button-bg: #DC3545; /* Red */
+            --delete-button-hover-bg: #C82333;
+            --disabled-bg: #404040;
+            --disabled-text: #707070;
+            --error-color: #FF6B6B; /* Lighter red for errors */
+            --info-color: #6BE56B; /* Lighter green for info */
+            --snackbar-bg: #3A3A3A; /* Dark grey for snackbar background */
+            --snackbar-text: #FFFFFF; /* White text for snackbar */
+            --nav-active-bg: rgba(0, 191, 255, 0.15); /* Subtle background for active nav item */
+            --search-bg: #3A3A3A;
+            --search-text: #E0E0E0;
+            --search-border: #555555;
+            --filter-bg: #3A3A3A;
+            --filter-border: #555555;
+            --filter-text: #E0E0E0;
+            --filter-dropdown-bg: #4A4A4A;
+            --filter-dropdown-hover: #5A5A5A;
+        }
+
+        /* Light theme definition - for toggling, though dark is primary */
+        body.light-theme {
+            --background: var(--background-light);
+            --surface: var(--surface-light);
+            --card: var(--card-light);
+            --text-primary: var(--text-dark);
+            --text-secondary: var(--text-muted);
+            --border: var(--border-color-light);
+            --shadow: var(--shadow-color-light);
+            --appbar-gradient: linear-gradient(to right, var(--button-gradient-start-light), var(--button-gradient-end-light));
+            --main-accent: var(--accent-blue-light);
+            --secondary-accent: var(--accent-purple-light);
+            --button-primary-gradient: linear-gradient(to right, var(--button-gradient-start-light), var(--button-gradient-end-light));
+            --button-text-on-gradient: #FFFFFF;
+            --delete-button-bg: #DC3545;
+            --delete-button-hover-bg: #C82333;
+            --disabled-bg: #E0E0E0;
+            --disabled-text: #A0A0A0;
+            --error-color: #DC3545;
+            --info-color: #28A745;
+            --snackbar-bg: #323232;
+            --snackbar-text: #FFFFFF;
+            --nav-active-bg: rgba(0, 123, 255, 0.1);
+            --search-bg: #EAEAEA;
+            --search-text: #333333;
+            --search-border: #CCCCCC;
+            --filter-bg: #EAEAEA;
+            --filter-border: #CCCCCC;
+            --filter-text: #333333;
+            --filter-dropdown-bg: #FFFFFF;
+            --filter-dropdown-hover: #F0F0F0;
+        }
+
+        /* Helper for RGB values (used for rgba calculations) */
+        :root { --accent-blue-rgb: 0, 191, 255; } /* Dark theme default */
+        body.light-theme { --accent-blue-rgb: 0, 123, 255; }
+
+        /* --- Base Styles --- */
+        html {
+            box-sizing: border-box;
+        }
+        *, *:before, *:after {
+            box-sizing: inherit;
+        }
+
+        body {
+            font-family: 'Roboto', 'Montserrat', sans-serif;
+            background-color: var(--background);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transition: background-color 0.3s ease, color 0.3s ease;
+
+            /* Dark blurred background image */
+            background-image: url('defluat-profile.png'); /* Placeholder, diversified */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.65); /* Darker overlay for better text contrast */
+            backdrop-filter: blur(10px); /* More blur */
+            z-index: -1;
+            transition: background-color 0.3s ease, backdrop-filter 0.3s ease;
+        }
+
+        body.light-theme::before {
+            background-color: rgba(255, 255, 255, 0.65);
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Orbitron', 'Roboto', sans-serif;
+            margin: 0;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        a {
+            color: var(--main-accent);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        a:hover {
+            color: var(--secondary-accent);
+            text-decoration: underline;
+        }
+
+        /* --- Header (formerly App Bar) --- */
+        .main-header {
+            width: 100%;
+            background-color: rgba(34, 34, 34, 0.95); /* More opaque */
+            backdrop-filter: blur(8px); /* More blur */
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            padding: 12px 25px; /* Increased padding */
+            box-shadow: 0 2px 15px var(--shadow); /* Stronger shadow */
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            justify-content: space-between; /* Distribute items */
+        }
+        body.light-theme .main-header {
+            background-color: rgba(255, 255, 255, 0.95);
+        }
+
+        .main-header .menu-toggle {
+            font-size: 1.5em; /* Slightly larger */
+            cursor: pointer;
+            padding: 10px; /* Increased padding */
+            border-radius: 8px; /* Slightly more rounded */
+            transition: background-color 0.2s ease, color 0.2s ease;
+            color: var(--text-primary);
+        }
+        .main-header .menu-toggle:hover {
+            background-color: rgba(0, 191, 255, 0.1); /* Accent hover */
+            color: var(--main-accent);
+        }
+        body.light-theme .main-header .menu-toggle:hover {
+            background-color: rgba(0, 123, 255, 0.1);
+            color: var(--main-accent);
+        }
+
+        .main-header .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8em; /* Larger logo */
+            font-weight: 700;
+            margin-left: 20px; /* Increased margin */
+            color: var(--main-accent);
+            text-shadow: 0 0 8px rgba(0, 191, 255, 0.4); /* Stronger glow */
+            text-decoration: none;
+            white-space: nowrap; /* Keep logo on one line */
+        }
+
+        .main-header .search-container {
+            flex-grow: 1;
+            margin: 0 40px; /* More margin */
+            position: relative;
+            max-width: 500px; /* Wider search bar */
+        }
+
+        .main-header .search-input {
+            width: 100%;
+            padding: 12px 18px 12px 45px; /* Adjust padding for icon */
+            border: 1px solid var(--search-border);
+            border-radius: 30px; /* More rounded */
+            background-color: var(--search-bg);
+            color: var(--search-text);
+            font-size: 1em;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+        }
+        .main-header .search-input::placeholder {
+            color: var(--text-secondary);
+        }
+        .main-header .search-input:focus {
+            border-color: var(--main-accent);
+            box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.4); /* Stronger focus glow */
+        }
+        .main-header .search-icon {
+            position: absolute;
+            left: 18px; /* Adjust icon position */
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 1.1em;
+        }
+
+        .main-header .header-actions {
+            display: flex;
+            gap: 15px; /* Increased gap */
+            align-items: center;
+        }
+
+        .main-header .action-button {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.3em; /* Larger icons */
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 50%;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        .main-header .action-button:hover {
+            background-color: rgba(0, 191, 255, 0.1); /* Accent hover */
+            color: var(--main-accent);
+        }
+        body.light-theme .main-header .action-button:hover {
+            background-color: rgba(0, 123, 255, 0.1);
+            color: var(--main-accent);
+        }
+
+        .theme-switch {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px; /* Larger switch */
+            height: 45px;
+            font-size: 1.3em;
+        }
+        .theme-switch i {
+            color: var(--text-primary);
+        }
+        .theme-switch span {
+            display: none;
+        }
+
+
+        /* --- Main Content Area --- */
+        .main-content {
+            flex-grow: 1;
+            width: 100%;
+            max-width: 1400px; /* Even wider content area */
+            margin: 30px auto; /* Increased margin */
+            padding: 25px 30px; /* Increased padding */
+            display: flex;
+            flex-direction: column;
+            gap: 40px; /* Increased gap between sections */
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap; /* Allow wrapping */
+            gap: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-title {
+            font-size: 2.5em; /* Even larger title */
+            font-weight: 700;
+            color: var(--main-accent);
+            font-family: 'Orbitron', sans-serif;
+            text-shadow: 0 0 10px rgba(0, 191, 255, 0.3);
+            margin: 0;
+        }
+
+        /* --- Filter Controls --- */
+        .filter-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-controls label {
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 0.95em;
+        }
+
+        .filter-controls select {
+            padding: 8px 15px;
+            border-radius: 8px;
+            border: 1px solid var(--filter-border);
+            background-color: var(--filter-bg);
+            color: var(--filter-text);
+            font-size: 0.9em;
+            outline: none;
+            cursor: pointer;
+            appearance: none; /* Remove default dropdown arrow */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23A0A0A0'%3E%3Cpath d='M7 10l5 5 5-5H7z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 1em;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+        }
+        body.light-theme .filter-controls select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23666666'%3E%3Cpath d='M7 10l5 5 5-5H7z'/%3E%3C/svg%3E");
+        }
+        .filter-controls select:hover {
+            border-color: var(--main-accent);
+            box-shadow: 0 0 0 1px rgba(0, 191, 255, 0.2);
+        }
+        .filter-controls select option {
+            background-color: var(--filter-dropdown-bg);
+            color: var(--filter-text);
+        }
+        .filter-controls select option:hover {
+            background-color: var(--filter-dropdown-hover);
+        }
+        .filter-controls button {
+            padding: 8px 15px;
+            border-radius: 8px;
+            border: 1px solid var(--filter-border);
+            background-color: var(--filter-bg);
+            color: var(--filter-text);
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+        }
+        .filter-controls button:hover {
+            background-color: var(--main-accent);
+            border-color: var(--main-accent);
+            color: var(--button-text-on-gradient);
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); /* Even larger min-width for cards */
+            gap: 35px; /* Increased gap */
+            margin-bottom: 30px;
+        }
+
+        /* --- Project Card --- */
+        .project-card {
+            background-color: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 15px; /* More rounded corners */
+            padding: 25px; /* Increased padding */
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease, background-color 0.2s ease, border-color 0.2s ease;
+            cursor: pointer;
+            box-shadow: 0 8px 25px var(--shadow); /* More prominent shadow */
+            position: relative;
+            overflow: hidden;
+            flex-basis: auto; /* Ensure cards can grow/shrink within grid */
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px); /* More pronounced hover */
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8); /* Deeper shadow on hover */
+            border-color: var(--main-accent); /* Highlight border */
+        }
+        .project-card:active {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+
+        .project-card .project-image-container {
+            width: 100%;
+            height: 200px; /* Fixed height for consistent images */
+            margin-bottom: 20px;
+            border-radius: 10px; /* Rounded image corners */
+            overflow: hidden;
+            background-color: #3A3A3A; /* Placeholder background */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+        }
+        .project-card .project-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .project-card:hover .project-image-container img {
+            transform: scale(1.08); /* More subtle scale */
+        }
+        .project-card .project-image-container .placeholder-icon {
+            font-size: 5em; /* Larger placeholder icon */
+            color: var(--text-secondary);
+            opacity: 0.4;
+        }
+
+        .project-card .project-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .project-card h3 {
+            font-size: 1.6em; /* Even larger title */
+            color: var(--text-primary);
+            font-family: 'Montserrat', 'Roboto', sans-serif;
+            font-weight: 600;
+            flex-grow: 1;
+            line-height: 1.3;
+        }
+
+        .project-card p.project-description {
+            font-size: 1em; /* Slightly larger description */
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.7;
+            flex-grow: 1; /* Allow description to take space */
+        }
+
+        .project-stats {
+            margin-top: 15px;
+            margin-bottom: 25px; /* Increased margin */
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            display: flex;
+            flex-direction: column;
+            gap: 8px; /* Gap between stat labels */
+        }
+
+        .project-stats .stat-label {
+            font-weight: 500;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .project-stats .stat-label i {
+            color: var(--main-accent);
+            font-size: 1.1em;
+        }
+
+
+        .open-count-bar-container {
+            width: 100%;
+            background-color: var(--border);
+            border-radius: 5px;
+            height: 10px; /* Taller bar */
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .open-count-bar {
+            height: 100%;
+            background: linear-gradient(to right, var(--main-accent), var(--secondary-accent)); /* Gradient bar */
+            width: 0%;
+            transition: width 0.5s ease-out;
+            border-radius: 5px;
+        }
+
+        .project-card .card-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px; /* Increased gap */
+            justify-content: flex-start;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .project-card button {
+            padding: 10px 20px; /* Larger padding */
+            border: none;
+            border-radius: 8px; /* More rounded */
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95em;
+            transition: all 0.2s ease;
+            color: var(--button-text-on-gradient);
+            box-shadow: 0 3px 10px var(--shadow); /* Stronger shadow */
+            display: flex;
+            align-items: center;
+            gap: 10px; /* Increased gap */
+            white-space: nowrap;
+        }
+
+        .project-card .open-btn,
+        .project-card .edit-name-btn, /* Renamed for clarity */
+        .project-card .export-btn,
+        .project-card .edit-readme-btn { /* New button */
+            background-image: var(--button-primary-gradient);
+            background-color: unset;
+        }
+        .project-card .open-btn:hover,
+        .project-card .edit-name-btn:hover,
+        .project-card .export-btn:hover,
+        .project-card .edit-readme-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+
+        .project-card .delete-btn {
+            background-color: var(--delete-button-bg);
+            background-image: none;
+            color: #FFFFFF;
+        }
+        .project-card .delete-btn:hover {
+            background-color: var(--delete-button-hover-bg);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+
+        /* Readme badge */
+        .readme-badge {
+            background-color: #34D399; /* Green for README */
+            color: #1A1A1A;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-left: auto;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        /* --- Floating Action Button (FAB) --- */
+        #floatingActionButton {
+            position: fixed;
+            bottom: 35px;
+            right: 35px;
+            width: 65px; /* Larger */
+            height: 65px;
+            border-radius: 50%;
+            background: var(--button-primary-gradient);
+            color: var(--button-text-on-gradient);
+            font-size: 1.8em; /* Larger icon */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px var(--shadow); /* More prominent shadow */
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            z-index: 1002;
+            border: none;
+            outline: none;
+        }
+
+        #floatingActionButton:hover:not(:disabled) {
+            transform: translateY(-8px) scale(1.1); /* Lift and grow more */
+            box-shadow: 0 15px 40px var(--shadow);
+        }
+        #floatingActionButton:active:not(:disabled) {
+            transform: translateY(0px) scale(0.97); /* Less jumpy on active */
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+
+        /* --- Navigation Drawer (now a Sidebar) --- */
+        .nav-drawer {
+            position: fixed;
+            top: 0;
+            left: -320px; /* Wider drawer */
+            width: 320px;
+            height: 100vh;
+            background: var(--surface);
+            box-shadow: 8px 0 20px var(--shadow); /* Stronger shadow */
+            transition: left 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            border-right: 1px solid var(--border);
+        }
+
+        .nav-drawer.open {
+            left: 0;
+        }
+
+        .drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7); /* Darker overlay */
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .drawer-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .drawer-header {
+            padding: 25px; /* Increased padding */
+            background: var(--appbar-gradient);
+            color: var(--button-text-on-gradient);
+            display: flex;
+            align-items: center;
+            min-height: 70px; /* Taller header */
+            box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+        }
+        .drawer-header img {
+            height: 45px; /* Larger logo */
+            width: 45px;
+            border-radius: 8px; /* More rounded */
+        }
+
+        .drawer-header h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.6em; /* Larger text */
+            font-weight: 700;
+            color: var(--button-text-on-gradient);
+            margin-left: 15px;
+            text-shadow: 0 0 8px rgba(0, 191, 255, 0.4);
+        }
+
+        .drawer-options {
+            list-style: none;
+            padding: 15px 0; /* Increased padding */
+            margin: 0;
+            flex-grow: 1;
+        }
+
+        .drawer-options button {
+            width: 100%;
+            padding: 20px 30px; /* More padding */
+            text-align: left;
+            background: none;
+            border: none;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.1em;
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 20px; /* Increased gap */
+            transition: background-color 0.2s ease, color 0.2s ease, border-left 0.2s ease;
+            border-left: 6px solid transparent; /* Highlight border */
+        }
+
+        .drawer-options button:hover,
+        .drawer-options button.active {
+            background-color: var(--nav-active-bg);
+            color: var(--main-accent);
+            border-left: 6px solid var(--main-accent);
+        }
+
+        .drawer-options button i {
+            font-size: 1.4em; /* Larger icon */
+            color: var(--text-secondary);
+            transition: color 0.2s ease;
+        }
+
+        .drawer-options button:hover i,
+        .drawer-options button.active i {
+            color: var(--main-accent);
+        }
+
+        /* --- Snackbar --- */
+        .snackbar {
+            position: fixed;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            min-width: 320px;
+            max-width: 650px;
+            background-color: var(--snackbar-bg);
+            color: var(--snackbar-text);
+            padding: 18px 28px; /* More padding */
+            border-radius: 8px; /* More rounded */
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4); /* Stronger shadow */
+            font-size: 1em; /* Slightly larger text */
+            font-weight: 500;
+            z-index: 1100;
+            opacity: 0;
+            visibility: hidden;
+            transition: bottom 0.3s cubic-bezier(0.4, 0.0, 0.2, 1), opacity 0.3s ease, visibility 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px; /* Increased gap */
+        }
+
+        .snackbar.show {
+            bottom: 35px; /* Deeper */
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .snackbar.success {
+            color: var(--info-color);
+        }
+        .snackbar.error {
+            color: var(--error-color);
+        }
+        .snackbar i {
+            font-size: 1.3em;
+            flex-shrink: 0;
+        }
+        .snackbar p {
+            margin: 0;
+            padding: 0;
+            flex-grow: 1;
+            text-align: left;
+        }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 1200px) {
+            .main-content {
+                max-width: 960px;
+            }
+            .projects-grid {
+                grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+                gap: 30px;
+            }
+            .main-header .search-container {
+                margin: 0 20px;
+                max-width: 400px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .main-header {
+                padding: 10px 20px;
+            }
+            .main-header .logo {
+                font-size: 1.6em;
+                margin-left: 15px;
+            }
+            .main-header .search-container {
+                margin: 0 15px;
+                max-width: 300px;
+            }
+            .main-header .action-button,
+            .theme-switch {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2em;
+            }
+
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .section-title {
+                font-size: 2em;
+            }
+            .filter-controls {
+                width: 100%;
+                justify-content: flex-start;
+            }
+
+            .projects-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 25px;
+            }
+            .project-card .project-image-container {
+                height: 180px;
+            }
+            .project-card h3 {
+                font-size: 1.4em;
+            }
+            .project-card p.project-description {
+                font-size: 0.95em;
+            }
+
+            #floatingActionButton {
+                bottom: 25px;
+                right: 25px;
+                width: 60px;
+                height: 60px;
+                font-size: 1.6em;
+            }
+            .nav-drawer {
+                width: 280px;
+                left: -300px;
+            }
+            .drawer-header h3 {
+                font-size: 1.4em;
+            }
+            .drawer-options button {
+                padding: 18px 25px;
+                font-size: 1.05em;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .main-header {
+                padding: 8px 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .main-header .menu-toggle {
+                order: 1;
+                margin-right: 10px;
+            }
+            .main-header .logo {
+                order: 2;
+                flex-grow: 1;
+                text-align: center;
+                margin-left: 0;
+                font-size: 1.5em;
+            }
+            .main-header .search-container {
+                order: 4; /* Move search below logo/actions */
+                width: 100%;
+                margin: 15px 0 0 0;
+                max-width: none;
+            }
+            .main-header .header-actions {
+                order: 3;
+                margin-left: auto;
+                gap: 10px;
+            }
+
+            .main-content {
+                padding: 15px;
+                gap: 30px;
+            }
+            .section-title {
+                font-size: 1.8em;
+                text-align: center;
+            }
+            .dashboard-header {
+                padding-bottom: 10px;
+            }
+            .filter-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .filter-controls select, .filter-controls button {
+                width: 100%;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .project-card {
+                padding: 20px;
+            }
+            .project-card .project-image-container {
+                height: 160px;
+            }
+            .project-card h3 {
+                font-size: 1.3em;
+            }
+            .project-card p.project-description {
+                font-size: 0.9em;
+            }
+            .project-card button {
+                padding: 8px 15px;
+                font-size: 0.8em;
+                gap: 8px;
+            }
+            .project-card .card-actions {
+                justify-content: center;
+            }
+
+            #floatingActionButton {
+                bottom: 20px;
+                right: 20px;
+                width: 55px;
+                height: 55px;
+                font-size: 1.5em;
+            }
+
+            .nav-drawer {
+                width: 250px;
+                left: -270px;
+            }
+            .drawer-header h3 {
+                font-size: 1.3em;
+            }
+            .drawer-options button {
+                padding: 16px 20px;
+                font-size: 1em;
+                gap: 15px;
+            }
+
+            .snackbar {
+                bottom: 20px;
+                left: 15px;
+                right: 15px;
+                transform: translateX(0);
+                max-width: none;
+                padding: 14px 20px;
+            }
+        }
+    </style>
+</head>
+<body class="dark-theme"> <!-- Default to dark theme -->
+    <!-- Main Header (Redesigned App Bar) -->
+    <header class="main-header">
+        <button class="menu-toggle action-button" id="menuToggle" title="Toggle Navigation">
+            <i class="fas fa-bars"></i>
+        </button>
+        <a href="well.html" class="logo">Gen1: Xbuilder</a>
+        <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" id="projectSearchInput" class="search-input" placeholder="Search projects...">
+        </div>
+        <div class="header-actions">
+            <button class="theme-switch action-button" id="themeSwitch" title="Toggle theme">
+                <i class="fas fa-sun" id="lightIcon"></i>
+                <i class="fas fa-moon" id="moonIcon" style="display: none;"></i>
+                <span id="themeText" class="sr-only">Toggle Theme</span>
+            </button>
+            <button class="settings-btn action-button" id="settingsBtn" title="Settings">
+                <i class="fas fa-cog"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <div class="dashboard-header">
+            <h2 class="section-title">Your Projects</h2>
+            <div class="filter-controls">
+                <label for="sortOrder">Sort by:</label>
+                <select id="sortOrder">
+                    <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                    <option value="mostOpened">Most Opened</option>
+                    <option value="leastOpened">Least Opened</option>
+                    <option value="az">Name (A-Z)</option>
+                    <option value="za">Name (Z-A)</option>
+                </select>
+                <!-- Add more filter buttons/dropdowns here as needed -->
+                <!-- <button id="filterTagBtn"><i class="fas fa-tag"></i> Filter by Tag</button> -->
+                <!-- <button id="filterCategoryBtn"><i class="fas fa-folder"></i> Filter by Category</button> -->
+            </div>
+        </div>
+
+        <div class="projects-grid" id="projectsGrid">
+            <p style="text-align: center; color: var(--text-secondary); padding: 30px; font-weight: 400;">
+                <i class="fas fa-sync fa-spin"></i> Loading projects...
+            </p>
+        </div>
+    </div>
+
+    <!-- Snackbar for Status Messages -->
+    <div class="snackbar" id="statusMessage">
+        <i class="fas fa-info-circle"></i> <p>Status messages will appear here.</p>
+    </div>
+
+    <!-- Floating Action Button (FAB) -->
+    <button id="floatingActionButton" title="Start New Project">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <!-- Navigation Drawer (now a Sidebar) -->
+    <nav class="nav-drawer" id="navDrawer">
+        <div class="drawer-header">
+            <img src="https://via.placeholder.com/45/00BFFF/FFFFFF?text=G1" alt="App Logo" style="height: 45px; width: 45px; border-radius: 8px;">
+            <h3>Gen1 App</h3>
+        </div>
+        <ul class="drawer-options">
+            <li><button id="drawerHomeBtn" class="active"><i class="fas fa-home"></i> Home</button></li>
+            <li><button id="drawerNewProjectBtn"><i class="fas fa-plus"></i> Start New Project</button></li>
+            <li><button id="drawerTemplatesBtn"><i class="fas fa-layer-group"></i> Project Templates</button></li>
+            <hr style="border-color: var(--border); margin: 10px 20px;">
+            <li><button id="drawerSettingsBtn"><i class="fas fa-cog"></i> Settings</button></li>
+            <li><button id="drawerAboutBtn"><i class="fas fa-info-circle"></i> About</button></li>
+        </ul>
+    </nav>
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+    <script>
+        const DB_NAME = 'Gen1DB';
+        const DB_VERSION = 1;
+        const PROJECTS_STORE_NAME = 'projects';
+        const FILES_STORE_NAME = 'projectFiles';
+        const CURRENT_PROJECT_ID_LS_KEY = 'gen1_current_project_id';
+        const THEME_STORAGE_KEY = 'gen1_theme';
+        const PROJECT_SORT_KEY = 'gen1_project_sort_order';
+
+        const body = document.body;
+        const themeSwitch = document.getElementById('themeSwitch');
+        const lightIcon = document.getElementById('lightIcon');
+        const moonIcon = document.getElementById('moonIcon');
+        const themeText = document.getElementById('themeText');
+        const projectsGrid = document.getElementById('projectsGrid');
+        const statusMessage = document.getElementById('statusMessage');
+        const settingsBtn = document.getElementById('settingsBtn');
+        const projectSearchInput = document.getElementById('projectSearchInput');
+        const sortOrderSelect = document.getElementById('sortOrder'); // New sort select
+
+        // Navigation Drawer elements
+        const menuToggle = document.getElementById('menuToggle');
+        const navDrawer = document.getElementById('navDrawer');
+        const drawerOverlay = document.getElementById('drawerOverlay');
+        const floatingActionButton = document.getElementById('floatingActionButton');
+
+        // Drawer options buttons
+        const drawerHomeBtn = document.getElementById('drawerHomeBtn');
+        const drawerNewProjectBtn = document.getElementById('drawerNewProjectBtn');
+        const drawerTemplatesBtn = document.getElementById('drawerTemplatesBtn');
+        const drawerSettingsBtn = document.getElementById('drawerSettingsBtn');
+        const drawerAboutBtn = document.getElementById('drawerAboutBtn');
+
+        let db;
+        let snackbarTimeout;
+        let allProjects = []; // Store all projects for search and filter
+
+        // --- IndexedDB Functions ---
+        function openGen1DB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+                request.onupgradeneeded = (event) => {
+                    db = event.target.result;
+                    if (!db.objectStoreNames.contains(PROJECTS_STORE_NAME)) {
+                        const projectStore = db.createObjectStore(PROJECTS_STORE_NAME, { keyPath: 'id' });
+                        projectStore.createIndex('name', 'name', { unique: false });
+                        projectStore.createIndex('createdAt', 'createdAt', { unique: false });
+                    }
+                    if (!db.objectStoreNames.contains(FILES_STORE_NAME)) {
+                        db.createObjectStore(FILES_STORE_NAME, { keyPath: 'projectId' });
+                    }
+                };
+
+                request.onsuccess = (event) => {
+                    db = event.target.result;
+                    resolve(db);
+                };
+
+                request.onerror = (event) => {
+                    console.error('IndexedDB error:', event.target.error);
+                    showStatus(`IndexedDB error: ${event.target.error.message}`, 'error');
+                    reject(event.target.error);
+                };
+            });
+        }
+
+        function getAllItemsFromStore(storeName) {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction([storeName], 'readonly');
+                const store = transaction.objectStore(storeName);
+                const request = store.getAll();
+
+                request.onsuccess = (event) => {
+                    resolve(event.target.result);
+                };
+
+                request.onerror = (event) => {
+                    reject(event.target.error);
+                };
+            });
+        }
+
+        function updateItemInStore(storeName, item) {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction([storeName], 'readwrite');
+                const store = transaction.objectStore(storeName);
+                const request = store.put(item); // Use put to update or add
+
+                request.onsuccess = () => resolve();
+                request.onerror = (event) => reject(event.target.error);
+            });
+        }
+
+
+        // --- Theme Toggling ---
+        function loadTheme() {
+            const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+            if (savedTheme === 'light') {
+                body.classList.remove('dark-theme');
+                body.classList.add('light-theme');
+                themeText.textContent = 'Light Mode';
+                lightIcon.style.display = 'inline-block';
+                moonIcon.style.display = 'none';
+            } else { // Default or 'dark' saved theme
+                body.classList.add('dark-theme');
+                body.classList.remove('light-theme');
+                themeText.textContent = 'Dark Mode';
+                lightIcon.style.display = 'none';
+                moonIcon.style.display = 'inline-block';
+            }
+        }
+
+        function toggleTheme() {
+            if (body.classList.contains('dark-theme')) {
+                body.classList.remove('dark-theme');
+                body.classList.add('light-theme');
+                localStorage.setItem(THEME_STORAGE_KEY, 'light');
+                themeText.textContent = 'Light Mode';
+                lightIcon.style.display = 'inline-block';
+                moonIcon.style.display = 'none';
+            } else {
+                body.classList.remove('light-theme');
+                body.classList.add('dark-theme');
+                localStorage.setItem(THEME_STORAGE_KEY, 'dark');
+                themeText.textContent = 'Dark Mode';
+                lightIcon.style.display = 'none';
+                moonIcon.style.display = 'inline-block';
+            }
+        }
+        themeSwitch.addEventListener('click', toggleTheme);
+
+        // --- Snackbar (Status Message) Display ---
+        function showStatus(message, type = 'info', duration = 3000) {
+            clearTimeout(snackbarTimeout);
+            statusMessage.classList.remove('success', 'error');
+            statusMessage.className = 'snackbar';
+            
+            let iconClass = 'fas fa-info-circle';
+            if (type === 'error') iconClass = 'fas fa-times-circle';
+            if (type === 'success') iconClass = 'fas fa-check-circle';
+
+            statusMessage.classList.add(type);
+            statusMessage.innerHTML = `<i class="${iconClass}"></i> <p>${message}</p>`;
+            statusMessage.classList.add('show');
+
+            snackbarTimeout = setTimeout(() => {
+                hideStatus();
+            }, duration);
+        }
+
+        function hideStatus() {
+            statusMessage.classList.remove('show');
+        }
+
+        // --- Project Icon & Image Placeholder (Simplified for well.html) ---
+        function getPlaceholderImageUrl(projectId) {
+            // Using a service like "picsum.photos" or similar for varied placeholders
+            return `https://picsum.photos/seed/${projectId}/400/200`;
+        }
+
+        // --- Project Rendering & Management ---
+        async function renderProjects(projectsToRender = allProjects) {
+            if (projectsToRender.length === 0 && projectSearchInput.value !== '') {
+                 projectsGrid.innerHTML = `
+                    <p style="text-align: center; color: var(--text-secondary); padding: 30px; font-weight: 400;">
+                        No projects found matching "${projectSearchInput.value}".
+                    </p>
+                `;
+                return;
+            }
+
+            if (allProjects.length === 0) { // Only show this if there are genuinely NO projects
+                projectsGrid.innerHTML = `
+                    <p style="text-align: center; color: var(--text-secondary); padding: 30px; font-weight: 400;">
+                        No projects found. Tap the <i class="fas fa-plus fa-lg" style="color: var(--main-accent);"></i> button to create your first project.
+                    </p>
+                `;
+                return;
+            }
+
+            const sortOrder = sortOrderSelect.value;
+            let maxOpenCount = 0;
+
+            // Update openCount for all projects (even those not currently rendered) before sorting
+            // This ensures sort order is consistent even if some projects are filtered out
+            projectsToRender = projectsToRender.map(project => {
+                const openCountKey = `gen1_project_open_count_${project.id}`;
+                const openCount = parseInt(localStorage.getItem(openCountKey) || '0', 10);
+                if (openCount > maxOpenCount) {
+                    maxOpenCount = openCount;
+                }
+                return { ...project, openCount };
+            });
+
+            // Apply sorting
+            switch (sortOrder) {
+                case 'newest': projectsToRender.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); break;
+                case 'oldest': projectsToRender.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)); break;
+                case 'mostOpened': projectsToRender.sort((a, b) => b.openCount - a.openCount); break;
+                case 'leastOpened': projectsToRender.sort((a, b) => a.openCount - b.openCount); break;
+                case 'az': projectsToRender.sort((a, b) => a.name.localeCompare(b.name)); break;
+                case 'za': projectsToRender.sort((a, b) => b.name.localeCompare(a.name)); break;
+                default: projectsToRender.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); break; // Default to newest
+            }
+
+            projectsGrid.innerHTML = ''; // Clear loading message
+
+            projectsToRender.forEach((project) => {
+                const openCount = project.openCount;
+                const barWidth = maxOpenCount > 0 ? (openCount / maxOpenCount) * 100 : 0;
+                const imageUrl = project.imageUrl || getPlaceholderImageUrl(project.id);
+
+                const projectCard = document.createElement('div');
+                projectCard.classList.add('project-card');
+                projectCard.dataset.projectId = project.id;
+                projectCard.innerHTML = `
+                    <div class="project-image-container">
+                        ${imageUrl ? `<img src="${imageUrl}" alt="Project ${project.name} image">` : `<i class="fas fa-image placeholder-icon"></i>`}
+                    </div>
+                    <div class="project-header">
+                        <h3>${project.name}</h3>
+                        ${project.hasReadme ? '<span class="readme-badge"><i class="fab fa-markdown"></i> README</span>' : ''}
+                    </div>
+                    <p class="project-description">${project.description || 'No description provided.'}</p>
+                    <div class="project-stats">
+                        <span class="stat-label"><i class="fas fa-calendar-alt"></i> Created: ${new Date(project.createdAt).toLocaleDateString()}</span>
+                        <span class="stat-label"><i class="fas fa-eye"></i> Opens: <span class="open-count">${openCount}</span></span>
+                        <div class="open-count-bar-container">
+                            <div class="open-count-bar" style="width: ${barWidth}%;"></div>
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="open-btn"><i class="fas fa-folder-open"></i> Open Project</button>
+                        <button class="edit-name-btn"><i class="fas fa-pen"></i> Rename</button>
+                        ${project.hasReadme ? `<button class="edit-readme-btn"><i class="fas fa-file-alt"></i> Edit README</button>` : ''}
+                        <button class="export-btn"><i class="fas fa-download"></i> Export</button>
+                        <button class="delete-btn"><i class="fas fa-trash-alt"></i> Delete</button>
+                    </div>
+                `;
+
+                projectCard.querySelector('.export-btn').addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    exportProjectAsZip(project.id);
+                });
+                projectCard.querySelector('.open-btn').addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    openProject(project.id);
+                });
+                projectCard.querySelector('.edit-name-btn').addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    editProjectName(project.id, project.name);
+                });
+                if (project.hasReadme) {
+                    projectCard.querySelector('.edit-readme-btn').addEventListener('click', (event) => {
+                        event.stopPropagation();
+                        editProjectReadme(project.id);
+                    });
+                }
+                projectCard.querySelector('.delete-btn').addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    deleteProject(project.id);
+                });
+                projectCard.addEventListener('click', () => openProject(project.id));
+
+                projectsGrid.appendChild(projectCard);
+            });
+        }
+
+        async function loadAllProjectsAndRender() {
+            projectsGrid.innerHTML = `
+                <p style="text-align: center; color: var(--text-secondary); padding: 30px; font-weight: 400;">
+                    <i class="fas fa-sync fa-spin"></i> Loading projects from database...
+                </p>
+            `;
+            try {
+                if (!db) {
+                    await openGen1DB();
+                }
+
+                allProjects = await getAllItemsFromStore(PROJECTS_STORE_NAME);
+                // Add mock data for images and readme if missing for demonstration
+                // In a real app, imageUrl and hasReadme would come from project creation/editing
+                allProjects = allProjects.map(p => ({
+                    ...p,
+                    imageUrl: p.imageUrl || null, // Will use placeholder if null
+                    hasReadme: p.hasReadme === true ? true : false, // Ensure boolean, default to false
+                    description: p.description || 'A groundbreaking new project.', // Default description
+                }));
+                applySearchAndFilter(); // Apply initial search/filter
+            } catch (error) {
+                console.error('Error loading projects:', error);
+                projectsGrid.innerHTML = `
+                    <p style="text-align: center; color: var(--error-color); padding: 30px; font-weight: 400;">
+                        <i class="fas fa-exclamation-triangle"></i> Failed to load projects. Please refresh or check console.
+                    </p>
+                `;
+                showStatus(`Failed to load projects: ${error.message}`, 'error');
+            }
+        }
+
+        function openProject(projectId) {
+            const key = `gen1_project_open_count_${projectId}`;
+            let count = parseInt(localStorage.getItem(key) || '0', 10);
+            count++;
+            localStorage.setItem(key, count.toString());
+            localStorage.setItem(CURRENT_PROJECT_ID_LS_KEY, projectId);
+            window.location.href = 'Pe.html'; // Assuming Pe.html is the project editor page
+        }
+
+        async function editProjectName(projectId, currentName) {
+            const newName = prompt('Enter new project name:', currentName);
+            if (newName !== null && newName.trim() !== '' && newName !== currentName) {
+                showStatus('Renaming project...', 'info');
+                try {
+                    const project = allProjects.find(p => p.id === projectId);
+                    if (project) {
+                        project.name = newName.trim();
+                        await updateItemInStore(PROJECTS_STORE_NAME, project);
+                        await loadAllProjectsAndRender(); // Re-render all projects to reflect change
+                        showStatus('Project renamed successfully!', 'success');
+                    }
+                } catch (error) {
+                    console.error('Error renaming project:', error);
+                    showStatus(`Failed to rename project: ${error.message}`, 'error');
+                }
+            } else if (newName !== null) { // If user entered empty string or current name
+                showStatus('Project name not changed.', 'info');
+            }
+        }
+
+        async function editProjectReadme(projectId) {
+            // For this 'well.html' page, we'll simulate editing.
+            // In a real app, this would navigate to 'Pe.html' or open a modal editor.
+            showStatus('Opening README for editing...', 'info');
+            const project = allProjects.find(p => p.id === projectId);
+            if (project) {
+                const currentReadmeContent = "This is a placeholder README content. In a real application, you would edit this on a dedicated editor page.\n\nProject: " + project.name;
+                const newReadmeContent = prompt(`Edit README for "${project.name}":`, currentReadmeContent);
+                if (newReadmeContent !== null) {
+                    // Here you would typically save the new README content to IndexedDB
+                    // (e.g., projectFiles store, associated with this project ID and a 'README.md' key)
+                    // For demonstration, we'll just show a success message.
+                    showStatus('README content updated (simulated save).', 'success');
+                    // If you wanted to actually update `hasReadme` or `readmeContent` in the project object:
+                    // project.readmeContent = newReadmeContent; // You'd need a 'readmeContent' field
+                    // await updateItemInStore(PROJECTS_STORE_NAME, project);
+                    // renderProjects();
+                } else {
+                    showStatus('README editing cancelled.', 'info');
+                }
+            } else {
+                showStatus('Project not found to edit README.', 'error');
+            }
+        }
+
+
+        async function deleteProject(projectIdToDelete) {
+            if (confirm(`Are you sure you want to delete this project permanently? This action cannot be undone.`)) {
+                showStatus('Deleting project...', 'info');
+                try {
+                    const transaction = db.transaction([PROJECTS_STORE_NAME, FILES_STORE_NAME], 'readwrite');
+                    const projectsStore = transaction.objectStore(PROJECTS_STORE_NAME);
+                    const filesStore = transaction.objectStore(FILES_STORE_NAME);
+
+                    await Promise.all([
+                        new Promise((resolve, reject) => {
+                            const req1 = projectsStore.delete(projectIdToDelete);
+                            req1.onsuccess = () => resolve();
+                            req1.onerror = (e) => reject(e.target.error);
+                        }),
+                        new Promise((resolve, reject) => {
+                            const req2 = filesStore.delete(projectIdToDelete);
+                            req2.onsuccess = () => resolve();
+                            req2.onerror = (e) => reject(e.target.error);
+                        })
+                    ]);
+                    localStorage.removeItem(`gen1_project_open_count_${projectIdToDelete}`);
+
+                    showStatus('Project deleted successfully!', 'success');
+                    await loadAllProjectsAndRender(); // Reload and render projects
+                } catch (error) {
+                    console.error('Error deleting project:', error);
+                    showStatus(`Failed to delete project: ${error.message}`, 'error');
+                }
+            }
+        }
+
+        // --- Project Export (ZIP) ---
+        async function exportProjectAsZip(projectId) {
+  async function getItemFromStoreById(storeName, key) {
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction([storeName], 'readonly');
+      const store = transaction.objectStore(storeName);
+      const request = store.get(key);
+      request.onsuccess = (event) => {
+        resolve(event.target.result);
+      };
+      request.onerror = (event) => {
+        reject(event.target.error);
+      };
+    });
+  }
+
+  try {
+    const project = await getItemFromStoreById(PROJECTS_STORE_NAME, projectId);
+    if (!project) {
+      throw new Error('Project not found');
+    }
+
+    const files = await getItemFromStoreById(FILES_STORE_NAME, projectId);
+    const projectFiles = files && files.files ? files.files : {};
+
+    const zip = new JSZip();
+    zip.file('project.json', JSON.stringify(project, null, 2));
+
+    if (project.hasReadme && project.readmeContent) {
+      zip.file('README.md', project.readmeContent);
+    } else if (project.hasReadme && projectFiles['README.md']) {
+      zip.file('README.md', projectFiles['README.md']);
+    }
+
+    Object.keys(projectFiles).forEach((filePath) => {
+      if (filePath === 'README.md' && project.hasReadme && project.readmeContent) {
+        return;
+      }
+      const content = projectFiles[filePath];
+      zip.file(filePath, content);
+    });
+
+    const zipBlob = await zip.generateAsync({ type: 'blob' });
+
+    if (window.AndroidSaver && typeof window.AndroidSaver.saveFile === 'function') {
+      const reader = new FileReader();
+      reader.onload = function() {
+        const fileContent = reader.result;
+        window.AndroidSaver.saveFile(`${project.name}.zip`, fileContent);
+        showStatus('Project exported successfully via Android!', 'success');
+      };
+      reader.readAsArrayBuffer(zipBlob);
+    } else {
+      saveAs(zipBlob, `${project.name}.zip`);
+      showStatus('Project exported successfully!', 'success');
+    }
+  } catch (error) {
+    console.error('Error exporting project:', error);
+    showStatus(`Failed to export project: ${error.message}`, 'error');
+  }
+}
+        // --- Navigation Drawer Logic ---
+        function openNavDrawer() {
+            navDrawer.classList.add('open');
+            drawerOverlay.classList.add('visible');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeNavDrawer() {
+            navDrawer.classList.remove('open');
+            drawerOverlay.classList.remove('visible');
+            document.body.style.overflow = '';
+        }
+
+        menuToggle.addEventListener('click', openNavDrawer);
+        floatingActionButton.addEventListener('click', () => {
+            window.location.href = 'Np.html'; // New Project Page
+        });
+        drawerOverlay.addEventListener('click', closeNavDrawer);
+
+        function setActiveDrawerButton(buttonToActivate) {
+            document.querySelectorAll('.drawer-options button').forEach(btn => btn.classList.remove('active'));
+            if (buttonToActivate) {
+                buttonToActivate.classList.add('active');
+            }
+        }
+
+        // Drawer option click handlers
+        drawerHomeBtn.addEventListener('click', () => {
+            closeNavDrawer();
+            setActiveDrawerButton(drawerHomeBtn);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        drawerNewProjectBtn.addEventListener('click', () => {
+            closeNavDrawer();
+            setActiveDrawerButton(drawerNewProjectBtn);
+            window.location.href = 'Np.html';
+        });
+
+        drawerTemplatesBtn.addEventListener('click', () => {
+            closeNavDrawer();
+            setActiveDrawerButton(drawerTemplatesBtn);
+            window.location.href = 'temp.html'; // Template page
+        });
+
+        drawerSettingsBtn.addEventListener('click', () => {
+            closeNavDrawer();
+            setActiveDrawerButton(drawerSettingsBtn);
+            window.location.href = 'settings.html';
+        });
+
+        drawerAboutBtn.addEventListener('click', () => {
+            closeNavDrawer();
+            setActiveDrawerButton(drawerAboutBtn);
+            showStatus("Gen1: Xbuilder - Version 1.0", 'info');
+        });
+
+
+        // App Bar Settings Button
+        settingsBtn.addEventListener('click', () => {
+            window.location.href = 'settings.html';
+        });
+
+        // --- Search and Filter Functionality ---
+        function applySearchAndFilter() {
+            const searchTerm = projectSearchInput.value.toLowerCase();
+            let filteredProjects = allProjects.filter(project =>
+                project.name.toLowerCase().includes(searchTerm) ||
+                (project.description && project.description.toLowerCase().includes(searchTerm))
+            );
+            // Add other filter logic here if you introduce more filters (e.g., by tag, category)
+
+            renderProjects(filteredProjects);
+            localStorage.setItem(PROJECT_SORT_KEY, sortOrderSelect.value); // Save sort preference
+        }
+
+        projectSearchInput.addEventListener('input', applySearchAndFilter);
+        sortOrderSelect.addEventListener('change', applySearchAndFilter);
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', async () => {
+            loadTheme();
+            sortOrderSelect.value = localStorage.getItem(PROJECT_SORT_KEY) || 'newest'; // Load saved sort preference
+            await loadAllProjectsAndRender();
+            setActiveDrawerButton(drawerHomeBtn);
+        });
+    </script>
+</body>
+</html>
