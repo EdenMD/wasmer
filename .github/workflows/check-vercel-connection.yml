@@ -20,13 +20,13 @@ jobs:
       - name: Deploy to Vercel
         id: deploy_step
         run: |
-          echo "Starting Vercel deployment from xbvercel folder..."
-          DEPLOY_OUTPUT=$(vercel deploy xbvercel --prod --token=${{ secrets.VercelToken }} --yes 2>&1)
+          echo "Starting Vercel deployment..."
+          # Deploying from repository root, vercel.json will handle 'outputDirectory' to 'xbvercel'
+          DEPLOY_OUTPUT=$(vercel deploy --prod --token=${{ secrets.VercelToken }} --yes 2>&1)
           echo "$DEPLOY_OUTPUT" # Log the full Vercel output for debugging
 
-          # Extract the unique Vercel deployment URL (e.g., Production: https://...vercel.app)
-          # Using \K to discard 'Production: ' and a lookahead for ' [Xs]' or end of line
-          UNIQUE_DEPLOY_URL=$(echo "$DEPLOY_OUTPUT" | grep -oP 'Production: \Khttps://[^\s]+(?=\s\[\d+s\]$|$)' || echo "")
+          # Extract the unique Vercel deployment URL, more robustly
+          UNIQUE_DEPLOY_URL=$(echo "$DEPLOY_OUTPUT" | grep -oP 'Production: \Khttps://[^\s]+' || echo "")
 
           if [ -z "$UNIQUE_DEPLOY_URL" ]; then
             echo "Error: Could not extract unique Vercel deployment URL."
