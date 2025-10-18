@@ -1,0 +1,703 @@
+:root {
+            --background-light: #F0F2F5;
+            --surface-light: #FFFFFF;
+            --card-light: #FFFFFF;
+            --text-dark: #333333;
+            --text-muted: #666666;
+            --accent-blue-light: #007BFF;
+            --accent-purple-light: #6F42C1;
+            --border-color-light: #E0E6F0;
+            --button-gradient-start-light: #007BFF;
+            --button-gradient-end-light: #6F42C1;
+            --shadow-color-light: rgba(0, 0, 0, 0.08);
+
+            --background: var(--background-light);
+            --surface: var(--surface-light);
+            --card: var(--card-light);
+            --text-primary: var(--text-dark);
+            --text-secondary: var(--text-muted);
+            --accent-main: var(--accent-blue-light);
+            --accent-secondary: var(--accent-purple-light);
+            --border: var(--border-color-light);
+            --button-start: var(--button-gradient-start-light);
+            --button-end: var(--button-gradient-end-light);
+            --shadow: var(--shadow-color-light);
+            --delete-button-bg: #DC3545;
+            --delete-button-hover-bg: #C82333;
+            --disabled-bg: #E0E0E0;
+            --disabled-text: #A0A0A0;
+            --error-color: #DC3545;
+            --info-color: #28A745;
+            --warning-color: #FFC107;
+
+            --monaco-editor-bg-light: #FFFFFF;
+            --monaco-editor-fg-light: #333333;
+            --monaco-border-light: #EEE;
+            --doc-preview-bg-light: #F9F9F9;
+        }
+
+        body.dark-theme {
+            --background: #1A1A2E;
+            --surface: #16213E;
+            --card: #0F3460;
+            --text-primary: #E0E0E0;
+            --text-secondary: #A0A0A0;
+            --accent-main: #E94560;
+            --accent-secondary: #533483;
+            --border: #00102A;
+            --button-start: #E94560;
+            --button-end: #533483;
+            --shadow: rgba(0, 0, 0, 0.4);
+
+            --delete-button-bg: #FF416C;
+            --delete-button-hover-bg: #D82255;
+            --disabled-bg: #404040;
+            --disabled-text: #707070;
+            --error-color: #FF416C;
+            --info-color: #39FF14;
+            --warning-color: #FFD700;
+
+            --monaco-editor-bg-dark: #1E1E1E;
+            --monaco-editor-fg-dark: #D4D4D4;
+            --monaco-border-dark: #3A3A3A;
+            --doc-preview-bg-dark: #282C34;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--background);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent-main);
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .top-bar {
+            width: 100%;
+            height: 60px;
+            background-color: var(--surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 15px;
+            box-sizing: border-box;
+            box-shadow: 0 2px 8px var(--shadow);
+            flex-shrink: 0;
+        }
+
+        .top-bar .button {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: color 0.2s ease, transform 0.2s ease;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            border-radius: 8px;
+        }
+
+        .top-bar .button:hover {
+            color: var(--accent-main);
+            background-color: rgba(0,0,0,0.05);
+            transform: scale(1.05);
+        }
+
+        body.dark-theme .top-bar .button:hover {
+            background-color: rgba(255,255,255,0.05);
+        }
+
+        .top-bar .project-title {
+            font-size: 1.4em;
+            flex-grow: 1;
+            text-align: center;
+            color: var(--accent-main);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .main-content-wrapper {
+            display: flex;
+            flex-grow: 1;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #editor-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--monaco-editor-bg-light);
+            color: var(--monaco-editor-fg-light);
+            transition: background-color 0.4s ease, color 0.4s ease;
+            border: 1px solid var(--monaco-border-light);
+            border-top: none;
+            border-bottom: none;
+        }
+        body.dark-theme #editor-container {
+            border-color: var(--monaco-border-dark);
+        }
+
+        #document-preview {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex; /* Changed to flex for centering content */
+            justify-content: center;
+            align-items: center;
+            background-color: var(--doc-preview-bg-light);
+            transition: background-color 0.4s ease;
+            z-index: 1; /* Above editor, but below modals/drawers */
+            overflow: auto;
+            border: 1px solid var(--monaco-border-light);
+            border-top: none;
+            border-bottom: none;
+            /* Initially hidden, will be managed by JS `display` property */
+            display: none;
+        }
+        body.dark-theme #document-preview {
+            background-color: var(--doc-preview-bg-dark);
+            border-color: var(--monaco-border-dark);
+        }
+
+        #document-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            border-radius: 5px;
+        }
+
+        #document-preview iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background-color: transparent; /* Allows preview background to show through if iframe content is transparent */
+        }
+
+        .file-drawer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 280px;
+            background-color: var(--card);
+            border-right: 1px solid var(--border);
+            box-shadow: 2px 0 15px var(--shadow);
+            transform: translateX(-100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+            padding-bottom: 15px;
+        }
+
+        .file-drawer.open {
+            transform: translateX(0);
+        }
+
+        .file-drawer-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 15px;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+            background-color: var(--surface);
+        }
+
+        .file-drawer-header h3 {
+            margin: 0;
+            font-size: 1.1em;
+            color: var(--accent-main);
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .file-actions .icon-button {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.1em;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 5px;
+            transition: color 0.2s ease, background-color 0.2s ease;
+        }
+
+        .file-actions .icon-button:hover {
+            color: var(--accent-main);
+            background-color: rgba(0,0,0,0.05);
+        }
+        body.dark-theme .file-actions .icon-button:hover {
+            background-color: rgba(255,255,255,0.05);
+        }
+
+        .file-list-drawer {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            overflow-y: auto;
+            flex-grow: 1;
+            padding-top: 10px;
+        }
+
+        .file-list-drawer li {
+            position: relative;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            color: var(--text-primary);
+            display: flex;
+            flex-direction: column;
+            font-size: 0.95em;
+            word-break: break-all;
+        }
+
+        body.dark-theme .file-list-drawer li {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .file-list-drawer li:hover {
+            background-color: var(--surface);
+            color: var(--accent-main);
+        }
+
+        .file-list-drawer li.active {
+            background-image: linear-gradient(to right, var(--button-start) 5%, rgba(0,0,0,0));
+            color: white;
+            font-weight: 600;
+            border-left: 3px solid var(--accent-main);
+        }
+
+        .file-list-drawer li.active .toggle-icon,
+        .file-list-drawer li.active .folder-icon,
+        .file-list-drawer li.active .file-type-icon,
+        .file-list-drawer li.active .item-actions .icon-button {
+            color: white;
+        }
+
+        .file-list-drawer .folder-item > .content-wrapper,
+        .file-list-drawer .file-item > .content-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            flex-grow: 1;
+            position: relative;
+        }
+
+        .file-list-drawer .toggle-icon {
+            width: 16px;
+            text-align: center;
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            transition: transform 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .file-list-drawer .folder-item.open .toggle-icon {
+            transform: rotate(90deg);
+        }
+
+        .file-list-drawer .folder-icon,
+        .file-list-drawer .file-type-icon {
+            color: var(--text-secondary);
+            font-size: 1.1em;
+            width: 1.2em;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .file-list-drawer .folder-name,
+        .file-list-drawer .file-name {
+            flex-grow: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .file-list-drawer .item-actions {
+            position: absolute;
+            right: 10px;
+            display: flex;
+            gap: 4px;
+            background-color: var(--surface);
+            padding-left: 5px;
+            border-radius: 5px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
+        }
+
+        .file-list-drawer li:hover > .content-wrapper .item-actions {
+            opacity: 1;
+            visibility: visible;
+        }
+        .file-list-drawer li.active > .content-wrapper .item-actions {
+            background-color: transparent;
+        }
+
+        .file-list-drawer .item-actions .icon-button {
+            font-size: 0.9em;
+            padding: 4px;
+            color: var(--text-secondary); /* Ensure buttons are visible in active state */
+        }
+        .file-list-drawer li.active > .content-wrapper .item-actions .icon-button {
+             color: white; /* Make buttons white in active state */
+        }
+
+
+        .file-list-drawer ul.nested-file-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: none;
+        }
+
+        .file-list-drawer ul.nested-file-list > li > .content-wrapper {
+            padding-left: 30px;
+        }
+
+        .file-list-drawer ul.nested-file-list ul.nested-file-list > li > .content-wrapper {
+             padding-left: 45px;
+        }
+
+        .drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 90;
+            display: none;
+        }
+        .drawer-overlay.visible {
+            display: block;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--surface);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 -2px 8px var(--shadow);
+            flex-shrink: 0;
+            padding: 0 5px;
+            box-sizing: border-box;
+        }
+
+        .nav-button {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 0.9em;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            border-radius: 8px;
+            transition: color 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
+            flex-basis: 0;
+            flex-grow: 1;
+        }
+
+        .nav-button:hover {
+            color: var(--accent-main);
+            transform: translateY(-2px);
+            background-color: rgba(0,0,0,0.05);
+        }
+        body.dark-theme .nav-button:hover {
+            background-color: rgba(255,255,255,0.05);
+        }
+
+        .nav-button i {
+            font-size: 1.6em;
+        }
+
+        .status-message {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-size: 0.9em;
+            color: var(--text-primary);
+            box-shadow: 0 4px 10px var(--shadow);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            min-width: 200px;
+            text-align: center;
+            justify-content: center;
+        }
+
+        .status-message.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .status-message.success { color: var(--info-color); border-color: var(--info-color); }
+        .status-message.error { color: var(--error-color); border-color: var(--error-color); }
+        .status-message.warning { color: var(--warning-color); border-color: var(--warning-color); }
+        .status-message.info { color: var(--text-primary); border-color: var(--border); }
+
+
+        .status-message i {
+            font-size: 1.1em;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .modal-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: var(--card);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px var(--shadow);
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            transform: scale(0.95);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .modal-overlay.visible .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-content h4 {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            color: var(--accent-main);
+        }
+
+        .modal-content p {
+            font-size: 0.9em;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+
+        .modal-content input[type="text"],
+        .modal-content select {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            background-color: var(--surface);
+            color: var(--text-primary);
+            font-size: 1em;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .modal-content input[type="text"]:focus,
+        .modal-content select:focus {
+            border-color: var(--accent-main);
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .modal-buttons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .modal-buttons .confirm-button {
+            background-image: linear-gradient(to right, var(--button-start), var(--button-end));
+            color: white;
+        }
+
+        .modal-buttons .confirm-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .modal-buttons .cancel-button {
+            background-color: var(--background);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .modal-buttons .cancel-button:hover {
+            background-color: var(--border);
+            transform: translateY(-2px);
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .document-toolbar {
+            display: none; /* Hidden by default, shown when document JSON is open or image/pdf preview is active */
+            position: absolute;
+            top: 60px; /* Below top-bar */
+            right: 0;
+            padding: 10px;
+            background-color: var(--card);
+            border-bottom-left-radius: 8px;
+            box-shadow: 0 2px 8px var(--shadow);
+            z-index: 10;
+            gap: 10px;
+            align-items: center;
+        }
+        .document-toolbar.visible {
+            display: flex;
+        }
+        .document-toolbar .button {
+            font-size: 1em;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background-image: linear-gradient(to right, var(--button-start), var(--button-end));
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .document-toolbar .button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+
+        @media (max-width: 768px) {
+            .top-bar {
+                height: 50px;
+                padding: 0 10px;
+            }
+            .top-bar .button {
+                font-size: 1.3em;
+            }
+            .top-bar .project-title {
+                font-size: 1.2em;
+            }
+            .file-drawer {
+                width: 240px;
+            }
+            .file-drawer-header h3 {
+                font-size: 1em;
+            }
+            .file-actions .icon-button {
+                font-size: 1em;
+            }
+            .file-list-drawer li {
+                font-size: 0.85em;
+            }
+            .file-list-drawer .folder-item > .content-wrapper,
+            .file-list-drawer .file-item > .content-wrapper {
+                padding: 8px 10px;
+            }
+            .file-list-drawer ul.nested-file-list > li > .content-wrapper {
+                padding-left: 25px;
+            }
+            .file-list-drawer ul.nested-file-list ul.nested-file-list > li > .content-wrapper {
+                 padding-left: 40px;
+            }
+            .bottom-nav {
+                height: 60px;
+                padding: 0 2px;
+            }
+            .nav-button {
+                font-size: 0.75em;
+                gap: 3px;
+                padding: 5px 5px;
+            }
+            .nav-button i {
+                font-size: 1.3em;
+            }
+            .status-message {
+                bottom: 70px;
+                padding: 10px 15px;
+                font-size: 0.85em;
+            }
+            .modal-content {
+                padding: 20px;
+            }
+            .modal-content h4 {
+                font-size: 1.1em;
+            }
+            .modal-buttons button {
+                padding: 8px 15px;
+            }
+            .document-toolbar {
+                top: 50px; /* Adjust for smaller top-bar */
+                right: 5px;
+                padding: 8px;
+                gap: 8px;
+            }
+            .document-toolbar .button {
+                padding: 6px 10px;
+                font-size: 0.9em;
+            }
+        }
