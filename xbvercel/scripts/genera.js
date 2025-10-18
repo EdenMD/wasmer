@@ -1,4 +1,3 @@
-```javascript
 function generateSimplifiedFileTreeForAI() {
     const root = { name: '', type: 'folder', children: [], path: '' };
     const allPaths = Object.keys(projectFilesData).filter(p => p !== CONVERSATION_FILENAME);
@@ -53,4 +52,24 @@ function generateSimplifiedFileTreeForAI() {
     // Add the important reminders section
     treeString += `\n\n--- IMPORTANT REMINDER FOR ANESHA ---\n`;
     treeString += `To perform file or GitHub operations, you MUST output a JSON block formatted EXACTLY as follows:\n\n`;
-    treeString += `
+    treeString += `°°°°\n`;
+    treeString += `\`\`\`json\n`;
+    treeString += `{\n`;
+    treeString += `  "action": "create" | "update" | "delete" | "mkdir" | "mvfile" | "github_create_file" | ...,\n`;
+    treeString += `  "path": "path/to/target.ext",\n`;
+    treeString += `  "has_content_block": true | false,\n`;
+    treeString += `  "content": "Optional short, JSON-escaped text if has_content_block is false",\n`;
+    treeString += `  // ... other action-specific fields as needed\n`;
+    treeString += `}\n`;
+    treeString += `\`\`\`\n`;
+    treeString += `°°°°\n\n`;
+    treeString += `If 'has_content_block' is true, immediately follow the JSON block with the raw content block, also delimited by four °°°°.\n`;
+    treeString += `Example for content block:\n`;
+    treeString += `°°°°\n`;
+    treeString += `This is the raw content.\nIt can have newlines, "quotes", and \\backslashes directly.\n`;
+    treeString += `°°°°\n\n`;
+    treeString += `Ensure the JSON is always wrapped in \`\`\`json and \`\`\` markdown, and the entire action block (including any content block) is wrapped in FOUR delimiters (°°°°).\n`;
+    treeString += `--- End Reminder ---`;
+
+    return treeString.trim();
+}
