@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Repo Templates</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Base Colors (Adapted for a tech-oriented, clean look) */
+        :root {
+            --clr-bg-dark: #1a1a2e; /* Dark background */
+            --clr-primary-green: #2ecc71; /* Primary green for main elements */
+            --clr-secondary-blue: #3498db; /* Secondary blue for complementary elements */
+            --clr-text-light: #e0e0e0; /* Light text for contrast */
+            --clr-text-muted: #a0a0a0; /* Muted text for secondary info */
+            --clr-border-glow: #00ffcc; /* Vibrant cyan/green for glowing borders/accents */
+            --clr-card-bg: #1f2c41; /* Slightly lighter dark for cards */
+            --clr-input-bg: #101a2d; /* Even darker for input fields */
+            --clr-success: #2ecc71; /* Green for success messages */
+            --clr-error: #e74c3c; /* Red for error messages */
+
+            /* Gradients (for headings, buttons, active states) */
+            --grad-primary-h1: linear-gradient(90deg, #84fab0, #8fd3f4); /* Soft green-blue gradient */
+            --grad-primary-h2: linear-gradient(90deg, var(--clr-primary-green), var(--clr-input-bg));
+            --grad-button: linear-gradient(45deg, var(--clr-primary-green), var(--clr-secondary-blue));
+
+            /* Shadows and Glows */
+            --shadow-deep: 0 8px 16px rgba(0, 0, 0, 0.6);
+            --glow-text: 0 0 8px rgba(0, 255, 204, 0.7); /* Cyan/Green text glow */
+            --glow-border: 0 0 10px rgba(0, 255, 204, 0.8); /* Cyan/Green border glow */
+            --glow-button: 0 0 15px rgba(46, 204, 113, 0.8); /* Green button glow */
+
+            /* Typography */
+            --font-primary: 'Montserrat', sans-serif;
+            --font-display: 'Orbitron', sans-serif; /* For title */
+
+            /* Spacing */
+            --spacing-xs: 5px;
+            --spacing-sm: 10px;
+            --spacing-md: 20px;
+            --spacing-lg: 30px;
+
+            /* Border Radius */
+            --border-radius-sm: 5px;
+            --border-radius-md: 10px;
+        }
+
+        /* Base Styles */
+        body {
+            font-family: var(--font-primary);
+            background-color: var(--clr-bg-dark);
+            color: var(--clr-text-light);
+            margin: 0;
+            padding: var(--spacing-md);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--spacing-md);
+            flex-grow: 1;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-display);
+            color: var(--clr-text-light);
+            margin-top: var(--spacing-md);
+            margin-bottom: var(--spacing-sm);
+            text-shadow: var(--glow-text);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            background-image: var(--grad-primary-h1);
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 2em;
+            background-image: var(--grad-primary-h2);
+        }
+
+        h3 {
+            font-size: 1.5em;
+            color: var(--clr-primary-green);
+            text-shadow: none;
+            background-image: none;
+            -webkit-text-fill-color: var(--clr-primary-green);
+        }
+
+        p {
+            line-height: 1.6;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        a {
+            color: var(--clr-border-glow);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--clr-primary-green);
+            text-shadow: var(--glow-text);
+        }
+
+        input[type="text"],
+        input[type="search"] {
+            width: calc(100% - var(--spacing-md));
+            padding: var(--spacing-sm);
+            margin-bottom: var(--spacing-md);
+            background-color: var(--clr-input-bg);
+            border: 1px solid var(--clr-secondary-blue);
+            border-radius: var(--border-radius-sm);
+            color: var(--clr-text-light);
+            font-family: var(--font-primary);
+            font-size: 1em;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="search"]:focus {
+            outline: none;
+            border-color: var(--clr-border-glow);
+            box-shadow: 0 0 8px rgba(0, 255, 204, 0.5);
+        }
+
+        /* Utility classes */
+        .text-center { text-align: center; }
+        .mt-md { margin-top: var(--spacing-md); }
+        .mb-md { margin-bottom: var(--spacing-md); }
+
+        /* Icons */
+        .fa {
+            margin-right: var(--spacing-xs);
+            color: var(--clr-border-glow);
+        }
+
+        /* Repo Specific Styles */
+        .search-container {
+            margin-bottom: var(--spacing-lg);
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        .theme-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-sm);
+            justify-content: center;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .theme-filter-button {
+            background-color: var(--clr-card-bg);
+            color: var(--clr-text-light);
+            border: 1px solid var(--clr-secondary-blue);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--border-radius-sm);
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.2s ease;
+        }
+
+        .theme-filter-button:hover {
+            border-color: var(--clr-primary-green);
+            background-color: var(--clr-input-bg);
+        }
+
+        .theme-filter-button.active {
+            background-image: var(--grad-button);
+            border-color: var(--clr-border-glow);
+            box-shadow: 0 0 8px rgba(0, 255, 204, 0.5);
+        }
+
+        .repo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-lg);
+        }
+
+        .repo-card {
+            background-color: var(--clr-card-bg);
+            border: 1px solid var(--clr-secondary-blue);
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-md);
+            box-shadow: var(--shadow-deep);
+            transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: pointer; /* Indicate clickability */
+        }
+
+        .repo-card:hover {
+            background-color: var(--clr-input-bg);
+            border-color: var(--clr-border-glow);
+            transform: translateY(-5px);
+            box-shadow: var(--glow-border);
+        }
+
+        .repo-card h4 {
+            font-family: var(--font-primary);
+            font-size: 1.2em;
+            margin: 0 0 var(--spacing-sm) 0;
+            text-align: left;
+            text-shadow: none;
+            background-image: none;
+            -webkit-text-fill-color: var(--clr-text-light);
+        }
+
+        .repo-card .description-text {
+            font-size: 0.95em;
+            line-height: 1.4;
+            color: var(--clr-text-muted);
+            margin-bottom: var(--spacing-sm);
+            flex-grow: 1;
+        }
+
+        .repo-card .themes-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-xs);
+            margin-top: var(--spacing-sm);
+            margin-bottom: var(--spacing-sm);
+            padding-top: var(--spacing-sm);
+            border-top: 1px dashed var(--clr-input-bg);
+        }
+
+        .repo-card .theme-tag {
+            background-color: rgba(0, 255, 204, 0.1);
+            color: var(--clr-border-glow);
+            font-size: 0.8em;
+            padding: 3px 8px;
+            border-radius: var(--border-radius-sm);
+            white-space: nowrap;
+        }
+
+        .repo-card .repo-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85em;
+            color: var(--clr-text-muted);
+            margin-top: var(--spacing-sm);
+            padding-top: var(--spacing-sm);
+            border-top: 1px solid var(--clr-input-bg);
+        }
+
+        /* The original "View on GitHub" link */
+        .repo-card .repo-link {
+            display: flex;
+            align-items: center;
+            color: var(--clr-secondary-blue);
+            transition: color 0.2s ease;
+            z-index: 1; /* Ensure it's clickable above the card click */
+        }
+         .repo-card .repo-link:hover {
+            color: var(--clr-primary-green);
+        }
+
+        .repo-card .repo-link .fab.fa-github {
+            font-size: 1.2em;
+            margin-right: var(--spacing-xs);
+            color: var(--clr-border-glow);
+        }
+
+        .repo-card .stars {
+            display: flex;
+            align-items: center;
+        }
+
+        .repo-card .stars .fas.fa-star {
+            color: gold;
+            margin-right: var(--spacing-xs);
+        }
+
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            margin: var(--spacing-lg) auto;
+            color: var(--clr-border-glow);
+        }
+        .loading-spinner.active {
+            display: block;
+        }
+
+        /* Status Message Styles */
+        .message-area {
+            position: fixed;
+            top: var(--spacing-md);
+            right: var(--spacing-md);
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--border-radius-sm);
+            color: var(--clr-text-light);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            box-shadow: var(--shadow-deep);
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            font-family: var(--font-primary);
+        }
+
+        .message-area.info { background-color: var(--clr-secondary-blue); }
+        .message-area.success { background-color: var(--clr-success); }
+        .message-area.error { background-color: var(--clr-error); }
+        .message-area.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .message-area i {
+            font-size: 1.2em;
+        }
+        .message-area p {
+            margin: 0;
+            font-size: 0.95em;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            h1 { font-size: 2em; }
+            h2 { font-size: 1.6em; }
+            .container { padding: var(--spacing-sm); }
+            .search-container { flex-direction: column; }
+            .theme-filters { justify-content: flex-start; }
+            .repo-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fab fa-github"></i> GitHub Repo Templates</h1>
+        <p class="text-center">Discover open-source project templates from GitHub for your next big idea. Filter by theme or search by keywords!</p>
+
+        <div class="search-container">
+            <input type="search" id="repoSearch" placeholder="Search repositories by name or description..." aria-label="Search repositories">
+            <div id="themeFilters" class="theme-filters">
+                <!-- Theme filter buttons will be dynamically generated here -->
+            </div>
+        </div>
+
+        <div id="repoGrid" class="repo-grid">
+            <!-- Repository cards will be dynamically generated here -->
+        </div>
+
+        <div id="loadingSpinner" class="loading-spinner">
+            <i class="fas fa-spinner fa-spin fa-2x"></i>
+            <p>Loading repositories...</p>
+        </div>
+    </div>
+
+    <!-- Status Message Area -->
+    <div id="statusMessage" class="message-area" style="display: none;">
+        <!-- Dynamic content here -->
+    </div>
+
+    <script>
+        // --- IndexedDB Constants ---
+        const DB_NAME = 'Gen1DB';
+        const DB_VERSION = 1;
+        const PROJECTS_STORE_NAME = 'projects';
+        const FILES_STORE_NAME = 'projectFiles';
+        const CURRENT_PROJECT_ID_LS_KEY = 'gen1_current_project_id';
+        const THEME_STORAGE_KEY = 'gen1_theme'; // Not used in this file, but good to keep for consistency
+
+        // --- UI Elements ---
+        const repoGrid = document.getElementById('repoGrid');
+        const repoSearch = document.getElementById('repoSearch');
+        const themeFiltersContainer = document.getElementById('themeFilters');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const statusMessage = document.getElementById('statusMessage');
+
+        // --- Global State ---
+        let db;
+        let allLoadedRepos = []; // Stores all repos fetched so far
+        let activeThemes = new Set();
+        let currentPage = 1;
+        let isLoading = false;
+        let currentSearchQuery = '';
+        let statusTimeoutId;
+
+        const PER_PAGE = 30; // Number of repos to fetch per page
+        // A more refined query for templates, boilerplates, and starters, requiring at least 50 stars
+        const DEFAULT_GITHUB_QUERY = 'template in:name,description,topics OR boilerplate in:name,description,topics OR starter in:name,description,topics stars:>=50';
+
+        // --- IndexedDB Functions ---
+        function openGen1DB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+                request.onupgradeneeded = (event) => {
+                    db = event.target.result;
+                    if (!db.objectStoreNames.contains(PROJECTS_STORE_NAME)) {
+                        db.createObjectStore(PROJECTS_STORE_NAME, { keyPath: 'id' });
+                    }
+                    if (!db.objectStoreNames.contains(FILES_STORE_NAME)) {
+                        db.createObjectStore(FILES_STORE_NAME, { keyPath: 'projectId' });
+                    }
+                    showStatus('Database setup complete!', 'info');
+                };
+
+                request.onsuccess = (event) => {
+                    db = event.target.result;
+                    showStatus('Database opened successfully.', 'info');
+                    resolve(db);
+                };
+
+                request.onerror = (event) => {
+                    console.error('IndexedDB error:', event.target.error);
+                    showStatus(`IndexedDB error: ${event.target.error.message}`, 'error');
+                    reject(event.target.error);
+                };
+            });
+        }
+
+        function getItemFromStore(storeName, key) {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction([storeName], 'readonly');
+                const store = transaction.objectStore(storeName);
+                const request = store.get(key);
+
+                request.onsuccess = (event) => {
+                    resolve(event.target.result);
+                };
+
+                request.onerror = (event) => {
+                    reject(event.target.error);
+                };
+            });
+        }
+
+        function getAllItemsFromStore(storeName) {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction([storeName], 'readonly');
+                const store = transaction.objectStore(storeName);
+                const request = store.getAll();
+
+                request.onsuccess = (event) => {
+                    resolve(event.target.result);
+                };
+
+                request.onerror = (event) => {
+                    reject(event.target.error);
+                };
+            });
+        }
+
+        // --- Utility Functions ---
+        function showStatus(message, type = 'info', duration = 3000) {
+            clearTimeout(statusTimeoutId);
+            statusMessage.style.display = 'flex';
+            statusMessage.className = 'message-area show'; // Reset classes and show
+            statusMessage.classList.add(type);
+
+            let iconClass = 'fas fa-info-circle';
+            if (type === 'error') iconClass = 'fas fa-times-circle';
+            if (type === 'success') iconClass = 'fas fa-check-circle';
+            if (type === 'loading') iconClass = 'fas fa-spinner fa-spin'; // Added for loading state feedback
+
+            statusMessage.innerHTML = `<i class="${iconClass}"></i> <p>${message}</p>`;
+            if (type !== 'loading') { // Don't auto-hide loading messages
+                statusTimeoutId = setTimeout(() => { hideStatus(); }, duration);
+            }
+        }
+
+        function hideStatus() {
+            clearTimeout(statusTimeoutId);
+            statusMessage.classList.remove('show');
+            statusMessage.addEventListener('transitionend', () => {
+                if (!statusMessage.classList.contains('show')) {
+                    statusMessage.style.display = 'none';
+                }
+            }, { once: true });
+        }
+
+        function getMimeType(filename) {
+            const ext = filename.slice(filename.lastIndexOf('.')).toLowerCase();
+            switch (ext) {
+                case '.html': return 'text/html';
+                case '.css': return 'text/css';
+                case '.js': return 'application/javascript';
+                case '.json': return 'application/json';
+                case '.txt': return 'text/plain';
+                case '.md': return 'text/markdown';
+                case '.svg': return 'image/svg+xml';
+                case '.png': return 'image/png';
+                case '.jpg': case '.jpeg': return 'image/jpeg';
+                case '.gif': return 'image/gif';
+                case '.webp': return 'image/webp';
+                case '.mp3': return 'audio/mpeg';
+                case '.wav': return 'audio/wav';
+                case '.mp4': return 'video/mp4';
+                case '.webm': return 'video/webm';
+                case '.zip': return 'application/zip';
+                default: return 'application/octet-stream';
+            }
+        }
+
+        function isTextFileByExtension(filename) {
+            const textExtensions = ['.html', '.css', '.js', '.json', '.txt', '.md', '.svg', '.xml', '.jsx', '.tsx', '.ts', '.py', '.jsonc', '.glsl', '.yaml', '.yml'];
+            const ext = filename.slice(filename.lastIndexOf('.')).toLowerCase();
+            return textExtensions.includes(ext) || (!filename.includes('.') && filename.length > 0);
+        }
+
+        function blobToBase64(blob) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(blob);
+            });
+        }
+
+        // --- GitHub API & Project Creation Logic ---
+
+        // Debounce function to limit API calls for search input
+        const debounce = (func, delay) => {
+            let timeout;
+            return function(...args) {
+                const context = this;
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(context, args), delay);
+            };
+        };
+
+        async function fetchRepos(query, page, append = false) {
+            if (isLoading) return;
+            isLoading = true;
+            loadingSpinner.classList.add('active');
+            showStatus('Fetching repositories...', 'loading');
+
+            const searchTerm = query || DEFAULT_GITHUB_QUERY;
+            const apiUrl = `https://api.github.com/search/repositories?q=${encodeURIComponent(searchTerm)}&sort=stars&order=desc&per_page=${PER_PAGE}&page=${page}`;
+
+            try {
+                const response = await fetch(apiUrl);
+                const rateLimitRemaining = response.headers.get('X-RateLimit-Remaining');
+                const rateLimitReset = response.headers.get('X-RateLimit-Reset'); // Unix timestamp
+
+                if (rateLimitRemaining && parseInt(rateLimitRemaining) < 5) { // Warn if close to limit
+                    const resetTime = new Date(parseInt(rateLimitReset) * 1000).toLocaleTimeString();
+                    showStatus(`Warning: GitHub API rate limit nearly reached. Resets at ${resetTime}.`, 'error', 10000);
+                }
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`GitHub API error: ${response.status} - ${errorData.message || response.statusText}`);
+                }
+                const data = await response.json();
+
+                if (append) {
+                    allLoadedRepos = allLoadedRepos.concat(data.items);
+                } else {
+                    allLoadedRepos = data.items;
+                    repoGrid.innerHTML = ''; // Clear for new search
+                }
+
+                if (data.items.length === 0 && !append) {
+                    repoGrid.innerHTML = '<p class="text-center" style="grid-column: 1 / -1; color: var(--clr-text-muted);">No repositories found matching your search.</p>';
+                }
+
+                renderRepoCards(allLoadedRepos);
+                renderThemeFilters(); // Re-render themes based on all loaded repos
+                hideStatus(); // Hide loading message
+            } catch (error) {
+                console.error('Error fetching repositories:', error);
+                showStatus(`Error fetching repositories: ${error.message}`, 'error');
+            } finally {
+                isLoading = false;
+                loadingSpinner.classList.remove('active');
+            }
+        }
+
+        async function createProjectFromGithubRepo(repoName, repoHtmlUrl) {
+            if (!db) {
+                showStatus('Database not ready. Please try again.', 'error');
+                return;
+            }
+
+            // Ensure project name is unique
+            const allProjects = await getAllItemsFromStore(PROJECTS_STORE_NAME);
+            if (allProjects.some(p => p.name.toLowerCase() === repoName.toLowerCase())) {
+                showStatus(`A project named "${repoName}" already exists.`, 'error', 5000);
+                return;
+            }
+
+            showStatus(`Creating project "${repoName}" from GitHub... This may take a while for large repos.`, 'loading');
+
+            try {
+                const match = repoHtmlUrl.match(/github\.com\/([^\/]+)\/([^\/]+)(?:\.git)?/);
+                if (!match) {
+                    throw new Error('Invalid GitHub repository URL format.');
+                }
+                const owner = match[1];
+                const repoShortName = match[2];
+
+                const repoApiUrl = `https://api.github.com/repos/${owner}/${repoShortName}`;
+                const repoResponse = await fetch(repoApiUrl);
+                if (!repoResponse.ok) {
+                    if (repoResponse.status === 404) {
+                        throw new Error('Repository not found. Please check the URL and ensure it\'s public.');
+                    }
+                    throw new Error(`Failed to get repository info: ${repoResponse.status} ${repoResponse.statusText}`);
+                }
+                const repoData = await repoResponse.json();
+                const defaultBranch = repoData.default_branch || 'main';
+
+                const treeApiUrl = `https://api.github.com/repos/${owner}/${repoShortName}/git/trees/${defaultBranch}?recursive=1`;
+                const treeResponse = await fetch(treeApiUrl);
+                if (!treeResponse.ok) {
+                    if (treeResponse.status === 404) {
+                        throw new Error(`Default branch '${defaultBranch}' not found or repository is empty.`);
+                    }
+                    throw new Error(`Failed to get repository tree for branch '${defaultBranch}': ${treeResponse.status} ${treeResponse.statusText}`);
+                }
+                const treeData = await treeResponse.json();
+
+                if (!treeData.tree || treeData.tree.length === 0) {
+                    throw new Error('No files found in the GitHub repository.');
+                }
+
+                const projectFilesContent = {};
+                let filesImportedCount = 0;
+                let filesSkippedCount = 0;
+
+                for (const item of treeData.tree) {
+                    if (item.type === 'blob') { // A blob is a file
+                        const filePath = item.path;
+                        // Skip files that are likely too large or irrelevant for a typical code project
+                        if (filePath.includes('/.git/') ||
+                            filePath.endsWith('.DS_Store') ||
+                            filePath.endsWith('.exe') ||
+                            filePath.endsWith('.zip') ||
+                            filePath.endsWith('.rar') ||
+                            filePath.endsWith('.tar.gz') ||
+                            filePath.endsWith('.node_modules/') // Not perfect, but tries to skip large dirs
+                        ) {
+                            filesSkippedCount++;
+                            continue;
+                        }
+
+                        const rawUrl = `https://raw.githubusercontent.com/${owner}/${repoShortName}/${defaultBranch}/${filePath}`;
+                        try {
+                            const fileResponse = await fetch(rawUrl);
+                            if (!fileResponse.ok) {
+                                console.warn(`Could not fetch ${filePath}: ${fileResponse.status} ${fileResponse.statusText}`);
+                                filesSkippedCount++;
+                                continue;
+                            }
+
+                            let content;
+                            const contentType = fileResponse.headers.get('Content-Type');
+                            if (contentType && (contentType.startsWith('text/') || contentType.includes('json') || contentType.includes('javascript') || contentType.includes('xml') || contentType.includes('svg'))) {
+                                content = await fileResponse.text();
+                            } else if (isTextFileByExtension(filePath)) { // Fallback for files without explicit text content-type
+                                content = await fileResponse.text();
+                            } else {
+                                const blob = await fileResponse.blob();
+                                content = await blobToBase64(blob);
+                            }
+                            projectFilesContent[filePath] = content;
+                            filesImportedCount++;
+                            showStatus(`Importing: ${filePath} (${filesImportedCount} files so far)`, 'loading');
+                        } catch (fileFetchError) {
+                            console.error(`Error fetching raw file ${filePath}:`, fileFetchError);
+                            filesSkippedCount++;
+                        }
+                    }
+                }
+
+                if (filesImportedCount === 0) {
+                    throw new Error('No readable files found in the GitHub repository after processing.');
+                }
+
+                // Create project in IndexedDB
+                const newProjectId = `proj_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+                const newProjectMetadata = {
+                    id: newProjectId,
+                    name: repoName,
+                    githubUrl: repoHtmlUrl,
+                    createdAt: new Date().toISOString()
+                };
+
+                const newProjectFiles = {
+                    projectId: newProjectId,
+                    files: projectFilesContent
+                };
+
+                const transaction = db.transaction([PROJECTS_STORE_NAME, FILES_STORE_NAME], 'readwrite');
+                const projectsStore = transaction.objectStore(PROJECTS_STORE_NAME);
+                const filesStore = transaction.objectStore(FILES_STORE_NAME);
+
+                await Promise.all([
+                    new Promise((resolve, reject) => {
+                        const req1 = projectsStore.add(newProjectMetadata);
+                        req1.onsuccess = () => resolve();
+                        req1.onerror = (e) => reject(e.target.error);
+                    }),
+                    new Promise((resolve, reject) => {
+                        const req2 = filesStore.add(newProjectFiles);
+                        req2.onsuccess = () => resolve();
+                        req2.onerror = (e) => reject(e.target.error);
+                    })
+                ]);
+
+                await new Promise((resolve, reject) => {
+                    transaction.oncomplete = () => resolve();
+                    transaction.onerror = (e) => reject(e.target.error);
+                });
+
+                localStorage.setItem(CURRENT_PROJECT_ID_LS_KEY, newProjectId);
+                showStatus(`Project "${repoName}" created successfully with ${filesImportedCount} files! Redirecting...`, 'success');
+                setTimeout(() => { window.location.href = 'Pe.html'; }, 1500);
+
+            } catch (error) {
+                console.error('GitHub import and project creation error:', error);
+                showStatus(`Failed to create project "${repoName}": ${error.message}. Please try again.`, 'error');
+            }
+        }
+
+        // --- Rendering Functions ---
+        function renderRepoCards(repos) {
+            // Only clear if it's a new search, not an append
+            if (currentPage === 1 && !currentSearchQuery && repoSearch.value === '') { // Only clear on initial load if no search
+                 // Don't clear if appending, or if a search result
+            }
+            // Clear only if starting a new search or initial load with empty search
+            const isInitialLoadOrNewSearch = (allLoadedRepos.length === repos.length && currentPage === 1) || (currentSearchQuery !== repoSearch.value.trim());
+            if (isInitialLoadOrNewSearch) {
+                repoGrid.innerHTML = '';
+            }
+
+            if (repos.length === 0) {
+                repoGrid.innerHTML = '<p class="text-center" style="grid-column: 1 / -1; color: var(--clr-text-muted);">No repositories found matching your criteria.</p>';
+                return;
+            }
+
+            const currentReposOnGrid = Array.from(repoGrid.children).map(card => card.dataset.repoId).filter(Boolean);
+
+            repos.forEach(repo => {
+                if (!repo.id || currentReposOnGrid.includes(String(repo.id))) { // Skip if already rendered or no ID
+                    return;
+                }
+                const card = document.createElement('div');
+                card.classList.add('repo-card');
+                card.dataset.repoName = repo.name; // Store name for click handler
+                card.dataset.repoUrl = repo.html_url; // Store URL for click handler
+                card.dataset.repoId = repo.id; // Store ID to prevent duplicates
+
+                const topics = repo.topics || (repo.description && repo.description.toLowerCase().includes('template') ? ['template'] : []);
+                const themesHtml = topics.slice(0, 5).map(topic => `<span class="theme-tag">${topic}</span>`).join(''); // Limit topics to 5
+
+                card.innerHTML = `
+                    <h4>${repo.name}</h4>
+                    <p class="description-text">${repo.description || 'No description available.'}</p>
+                    <div class="themes-list">${themesHtml}</div>
+                    <div class="repo-meta">
+                        <span class="stars"><i class="fas fa-star"></i> ${repo.stargazers_count.toLocaleString()}</span>
+                        <a href="${repo.html_url}" target="_blank" rel="noopener noreferrer" class="repo-link" onclick="event.stopPropagation();">
+                            <i class="fab fa-github"></i> View on GitHub
+                        </a>
+                    </div>
+                `;
+                card.addEventListener('click', (event) => {
+                    // Prevent default link behavior if clicking the card itself
+                    event.preventDefault();
+                    event.stopPropagation(); // Stop propagation to prevent issues if nested
+                    createProjectFromGithubRepo(repo.name, repo.html_url);
+                });
+                repoGrid.appendChild(card);
+            });
+        }
+
+        function renderThemeFilters() {
+            const uniqueThemes = new Set();
+            allLoadedRepos.forEach(repo => {
+                (repo.topics || []).forEach(topic => uniqueThemes.add(topic));
+                // Also extract common keywords from description for filtering
+                if (repo.description) {
+                    const descriptionKeywords = repo.description.toLowerCase().split(/\s+/).filter(word => word.length > 3 && !['the', 'and', 'for', 'with', 'from', 'into', 'this', 'that', 'build', 'using', 'based'].includes(word));
+                    descriptionKeywords.forEach(keyword => uniqueThemes.add(keyword));
+                }
+            });
+
+            // Clear previous filters and re-render
+            themeFiltersContainer.innerHTML = '';
+            Array.from(uniqueThemes).sort().forEach(theme => {
+                const button = document.createElement('button');
+                button.classList.add('theme-filter-button');
+                button.textContent = theme;
+                if (activeThemes.has(theme)) {
+                    button.classList.add('active');
+                }
+                button.addEventListener('click', () => {
+                    if (activeThemes.has(theme)) {
+                        activeThemes.delete(theme);
+                        button.classList.remove('active');
+                    } else {
+                        activeThemes.add(theme);
+                        button.classList.add('active');
+                    }
+                    filterDisplayedRepos();
+                });
+                themeFiltersContainer.appendChild(button);
+            });
+        }
+
+        function filterDisplayedRepos() {
+            const searchTerm = repoSearch.value.toLowerCase().trim();
+            let filtered = allLoadedRepos.filter(repo => {
+                const matchesSearch = repo.name.toLowerCase().includes(searchTerm) ||
+                                      (repo.description && repo.description.toLowerCase().includes(searchTerm));
+
+                const matchesThemes = activeThemes.size === 0 ||
+                                      (repo.topics && repo.topics.some(topic => activeThemes.has(topic))) ||
+                                      (repo.description && activeThemes.size > 0 && Array.from(activeThemes).some(activeTheme => repo.description.toLowerCase().includes(activeTheme)));
+
+                return matchesSearch && matchesThemes;
+            });
+
+            // Sort by stars in descending order for local filtering
+            filtered.sort((a, b) => b.stargazers_count - a.stargazers_count);
+
+            // Re-render only the locally filtered subset of already loaded repos
+            repoGrid.innerHTML = ''; // Clear current display
+            renderRepoCards(filtered); // Render the filtered subset
+        }
+
+
+        // --- Event Listeners & Initial Load ---
+
+        // Handle search input with debounce
+        repoSearch.addEventListener('input', debounce(() => {
+            currentSearchQuery = repoSearch.value.trim();
+            currentPage = 1; // Reset page for new search
+            allLoadedRepos = []; // Clear loaded repos
+            activeThemes.clear(); // Clear active themes on new search
+            fetchRepos(currentSearchQuery || DEFAULT_GITHUB_QUERY, currentPage, false);
+        }, 500)); // 500ms debounce
+
+        // Infinite scroll logic
+        window.addEventListener('scroll', () => {
+            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 && !isLoading) {
+                currentPage++;
+                fetchRepos(currentSearchQuery || DEFAULT_GITHUB_QUERY, currentPage, true);
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await openGen1DB(); // Open IndexedDB
+            fetchRepos(DEFAULT_GITHUB_QUERY, currentPage, false); // Initial fetch
+        });
+    </script>
+</body>
+</html>
