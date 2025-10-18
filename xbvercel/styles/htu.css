@@ -1,0 +1,214 @@
+ :root {
+            --background-light: #F0F2F5;
+            --surface-light: #FFFFFF;
+            --card-light: #F8F9FA;
+            --text-dark: #333333;
+            --text-muted: #666666;
+            --accent-blue-light: #007BFF;
+            --accent-purple-light: #6F42C1;
+            --border-color-light: #D1D9E6;
+            --button-gradient-start-light: #007BFF;
+            --button-gradient-end-light: #6F42C1;
+            --shadow-color-light: rgba(0, 0, 0, 0.1);
+
+            --background: var(--background-light);
+            --surface: var(--surface-light);
+            --card: var(--card-light);
+            --text-primary: var(--text-dark);
+            --text-secondary: var(--text-muted);
+            --accent-main: var(--accent-blue-light);
+            --accent-secondary: var(--accent-purple-light);
+            --border: var(--border-color-light);
+            --button-start: var(--button-gradient-start-light);
+            --button-end: var(--button-gradient-end-light);
+            --shadow: var(--shadow-color-light);
+            --delete-button-bg: #DC3545;
+            --delete-button-hover-bg: #C82333;
+            --disabled-bg: #E0E0E0;
+            --disabled-text: #A0A0A0;
+            --error-color: #DC3545;
+            --info-color: #28A745;
+        }
+
+        body.dark-theme {
+            --background: #121212;
+            --surface: #1F1F1F;
+            --card: #2C2C2C;
+            --text-primary: #E0E0E0;
+            --text-secondary: #A0A0A0;
+            --accent-main: #00BFFF;
+            --accent-secondary: #8A2BE2;
+            --border: #3A3A3A;
+            --button-start: #00BFFF;
+            --button-end: #8A2BE2;
+            --shadow: rgba(0, 0, 0, 0.4);
+
+            --delete-button-bg: #FF416C;
+            --delete-button-hover-bg: #D82255;
+            --disabled-bg: #404040;
+            --disabled-text: #707070;
+            --error-color: #FF416C;
+            --info-color: #39FF14;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--background);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-y: auto;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent-main);
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .header {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 20px;
+            box-sizing: border-box;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            text-shadow: none;
+        }
+
+        .back-button {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: color 0.2s ease, transform 0.2s ease;
+            padding: 5px;
+            border-radius: 8px;
+        }
+
+        .back-button:hover {
+            color: var(--accent-main);
+            background-color: rgba(0,0,0,0.05);
+            transform: scale(1.05);
+        }
+        body.dark-theme .back-button:hover {
+            background-color: rgba(255,255,255,0.05);
+        }
+
+        .container {
+            background-color: var(--surface);
+            box-shadow: 0 4px 15px var(--shadow);
+            border-radius: 8px;
+            margin: 20px 10px 40px 10px;
+            padding: 30px;
+            box-sizing: border-box;
+            width: 100%;
+            max-width: 900px;
+            border: 1px solid var(--border);
+            transition: background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            font-weight: 700;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+            text-align: center;
+            color: var(--accent-main);
+        }
+
+        .info-section {
+            margin-bottom: 30px;
+        }
+
+        .info-section h3 {
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-section p, .info-section ul {
+            font-size: 0.95em;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .info-section ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .info-section ul li {
+            margin-bottom: 8px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .info-section ul li::before {
+            content: '\2022'; /* Bullet point */
+            color: var(--accent-main);
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+            position: absolute;
+            left: 0;
+        }
+
+        .icon-text {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 600;
+            color: var(--accent-main);
+        }
+
+        .icon-text .fa-solid, .icon-text .fa-brands {
+            font-size: 1.1em;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px 15px;
+            }
+            .header h1 {
+                font-size: 1.6em;
+                text-align: center;
+            }
+            .container {
+                padding: 20px 15px;
+                margin: 15px 10px;
+            }
+            .section-title {
+                font-size: 1.5em;
+            }
+            .info-section h3 {
+                font-size: 1.2em;
+            }
+            .info-section p, .info-section ul li {
+                font-size: 0.9em;
+            }
+        }
