@@ -20,8 +20,8 @@ jobs:
       - name: Deploy to Vercel
         id: deploy_step
         run: |
-          echo "Starting Vercel deployment..."
-          DEPLOY_OUTPUT=$(vercel deploy --prod --token=${{ secrets.VercelToken }} --yes 2>&1)
+          echo "Starting Vercel deployment from xbvercel folder..."
+          DEPLOY_OUTPUT=$(vercel deploy xbvercel --prod --token=${{ secrets.VercelToken }} --yes 2>&1)
           echo "$DEPLOY_OUTPUT" # Log the full Vercel output for debugging
 
           # Extract the unique Vercel deployment URL (e.g., Production: https://...vercel.app)
