@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gen1: AI Assist</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- libsodium-wrappers for GitHub Secret Encryption -->
+<script src="https://cdn.jsdelivr.net/npm/libsodium-wrappers@0.7.11/dist/libsodium-wrappers.min.js"></script>
+
+<!-- jsPDF and AutoTable for PDF document creation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+<!-- docx for Word document creation -->
+<script src="https://unpkg.com/docx@8.1.3/build/index.js"></script>
+
+<!-- SheetJS (XLSX) for Excel document creation -->
+<script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+
+<!-- pptxgenjs for PowerPoint presentation creation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pptxgenjs/3.12.0/pptxgen.min.js"></script>  
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+   
+  
+    <!-- Assuming authcheck.js exists and is handled externally -->
+    <!-- <script type="module" src="authcheck.js"></script> -->
+
+         <link rel="stylesheet" href="styles/ai.css">
+</head>
+<body>
+    <div class="top-bar">
+        <button class="button" id="backButton" title="Go back to editor">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+        <h1 class="page-title">AI Assist</h1>
+        
+        			
+<button id="gh-btn" class="button" onclick="window.open('xgri.html', '_blank')">
+  <i class="fab fa-github"></i> gitlogs
+</button>
+        				
+        				 <button class="button" id="newChatButton" title="Start a new conversation">
+            <i class="fas fa-plus-circle"></i>
+        </button>
+        <!-- ADDED VISIBLE LABEL FOR FILE OPS TOGGLE -->
+        <span style="display: flex; align-items: center; gap: 5px; margin-left: 10px; color: var(--text-primary);">
+            <button class="button" id="toggleFileOpsButton" title="Toggle AI file operations">
+                <i class="fas fa-toggle-on"></i>
+            </button>
+            <span style="font-size: 0.9em; font-weight: 600;">File Ops</span>
+        </span>
+        <!-- END ADDED LABEL -->
+        <button class="button" id="fileMenuButton" title="View project files">
+            <i class="fas fa-folder-open"></i>
+        </button>
+        <button class="button" id="settingsButton" title="Settings">
+            <i class="fas fa-cog"></i>
+        </button>
+    </div>
+
+    <div class="chat-container">
+        <div class="message-display-area" id="messageDisplayArea">
+        </div>
+
+        <div class="message-input-area">
+            <!-- Image preview area (hidden by default) -->
+            <div id="attachedImagePreview">
+                <img id="imagePreview" src="#" alt="Image Preview">
+                <span id="previewFileName"></span>
+                <span id="previewFileSize"></span>
+                <button id="clearAttachedFile"><i class="fas fa-times-circle"></i></button>
+            </div>
+            
+            <!-- Text input and buttons -->
+            <div>
+                <textarea id="messageInput" placeholder="Type your message or reference a file (e.g., x@path/to/file.js)..."></textarea>
+                <input type="file" id="imageUploadInput" accept="image/*" style="display: none;">
+                <button id="attachImageButton" title="Attach an image">
+                    <i class="fas fa-image"></i>
+                </button>
+                <button id="toggleSpeechButton" title="Start/Stop audio chat">
+                    <i class="fas fa-microphone-alt"></i>
+                </button>
+                <button id="sendMessageButton">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="file-reference-drawer" id="fileReferenceDrawer">
+        <h3>Project Files</h3>
+        <ul class="file-list-reference" id="fileListReference">
+            <li><div class="content-wrapper"><span><i class="fas fa-sync fa-spin"></i> Loading files...</span></div></li>
+        </ul>
+    </div>
+
+    <div class="settings-drawer" id="settingsDrawer">
+        <h3>Settings</h3>
+        <div class="settings-content">
+            <div class="setting-group">
+                <label for="aiModelSelect">AI Model:</label>
+                <select id="aiModelSelect">
+                    <option value="gemini">Google Gemini</option>
+                    <option value="grok">Grok</option>
+                    <option value="deepseek">DeepSeek</option>
+                    <option value="claude">Anthropic Claude</option>
+                    <option value="llama">Meta LLaMA (via API)</option>
+                    <option value="mistral">Mistral AI (via API)</option>
+                </select>
+            </div>
+
+            <div class="setting-group" id="geminiSettings">
+                <label for="geminiApiKeyInput">Gemini API Key:</label>
+                <input type="password" id="geminiApiKeyInput" placeholder="Enter your Gemini API Key">
+                <label for="geminiEndpointInput">Gemini API Endpoint:</label>
+                <input type="text" id="geminiEndpointInput" placeholder="https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent">
+            </div>
+
+            <div class="setting-group" id="grokSettings" style="display: none;">
+                <label for="grokApiKeyInput">Grok API Key:</label>
+                <input type="password" id="grokApiKeyInput" placeholder="Enter your Grok API Key">
+                <label for="grokEndpointInput">Grok API Endpoint:</label>
+                <input type="text" id="grokEndpointInput" placeholder="https://api.grok.com/v1/chat/completions">
+            </div>
+
+            <div class="setting-group" id="deepseekSettings" style="display: none;">
+                <label for="deepseekApiKeyInput">DeepSeek API Key:</label>
+                <input type="password" id="deepseekApiKeyInput" placeholder="Enter your DeepSeek API Key">
+                <label for="deepseekEndpointInput">DeepSeek API Endpoint:</label>
+                <input type="text" id="deepseekEndpointInput" placeholder="https://api.deepseek.com/chat/completions">
+            </div>
+
+            <div class="setting-group" id="claudeSettings" style="display: none;">
+                <label for="claudeApiKeyInput">Claude API Key:</label>
+                <input type="password" id="claudeApiKeyInput" placeholder="Enter your Claude API Key">
+                <label for="claudeEndpointInput">Claude API Endpoint:</label>
+                <input type="text" id="claudeEndpointInput" placeholder="https://api.anthropic.com/v1/messages">
+                <label for="claudeModelNameInput">Claude Model Name:</label>
+                <input type="text" id="claudeModelNameInput" placeholder="e.g., claude-3-opus-20240229">
+            </div>
+
+            <div class="setting-group" id="llamaSettings" style="display: none;">
+                <label for="llamaApiKeyInput">LLaMA API Key:</label>
+                <input type="password" id="llamaApiKeyInput" placeholder="Enter your LLaMA API Key">
+                <label for="llamaEndpointInput">LLaMA API Endpoint:</label>
+                <input type="text" id="llamaEndpointInput" placeholder="https://api.perplexity.ai/chat/completions">
+                <label for="llamaModelNameInput">LLaMA Model Name:</label>
+                <input type="text" id="llamaModelNameInput" placeholder="e.g., llama-3-8b-instruct">
+            </div>
+
+            <div class="setting-group" id="mistralSettings" style="display: none;">
+                <label for="mistralApiKeyInput">Mistral API Key:</label>
+                <input type="password" id="mistralApiKeyInput" placeholder="Enter your Mistral API Key">
+                <label for="mistralEndpointInput">Mistral API Endpoint:</label>
+                <input type="text" id="mistralEndpointInput" placeholder="https://api.mistral.ai/v1/chat/completions">
+                <label for="mistralModelNameInput">Mistral Model Name:</label>
+                <input type="text" id="mistralModelNameInput" placeholder="e.g., mistral-large-latest">
+            </div>
+
+            <hr style="margin: 20px 0; border-color: var(--border);">
+            <h3>GitHub Integration</h3>
+            <div class="setting-group">
+                <label for="githubRepoUrlInput">GitHub Repository URL:</label>
+                <input type="text" id="githubRepoUrlInput" placeholder="e.g., https://github.com/username/repo">
+            </div>
+            <div class="setting-group">
+                <label for="githubBranchInput">GitHub Branch:</label>
+                <input type="text" id="githubBranchInput" placeholder="e.g., main">
+            </div>
+            <div class="setting-group">
+                <label for="githubPatInput">GitHub Personal Access Token:</label>
+                <input type="password" id="githubPatInput" placeholder="Enter PAT with 'repo' scope">
+                <p style="font-size: 0.8em; color: var(--text-secondary); margin-top: 5px;">
+                    <i class="fas fa-exclamation-triangle"></i> Storing PATs client-side carries security risks.
+                </p>
+            </div>
+
+            <hr style="margin: 20px 0; border-color: var(--border);">
+            <h3>Advanced Settings</h3>
+            <div class="setting-group">
+                <label for="markdownInstructionInput">AI File Operation Instruction (Advanced):</label>
+                <textarea id="markdownInstructionInput" placeholder="Customize the AI's instruction for file operations. Leave blank for default."></textarea>
+            </div>
+        </div>
+        <div class="settings-actions">
+            <button id="pullFromGithubButton"><i class="fas fa-cloud-download-alt"></i> Pull from GitHub</button>
+            <button id="pushToGithubButton"><i class="fas fa-cloud-upload-alt"></i> Push to GitHub</button>
+            <button id="closeSettingsButton">Close</button>
+            <button id="saveSettingsButton">Save Settings</button>
+        </div>
+    </div>
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+
+    <div class="status-message" id="statusMessage">
+        <i class="fas fa-info-circle"></i> <p>Working...</p>
+    </div>
+
+    <!-- Audio Mode Overlay -->
+    <div class="audio-mode-overlay" id="audioModeOverlay">
+        <button class="exit-button" id="exitAudioModeButton" title="Exit audio mode">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="status-text" id="audioStatusText"></div>
+        <div class="audio-bars" id="audioVisualizer">
+            <div class="audio-bar"></div>
+            <div class="audio-bar"></div>
+            <div class="audio-bar"></div>
+            <div class="audio-bar"></div>
+            <div class="audio-bar"></div>
+        </div>
+    </div>
+
+     <!-- Your HTML content -->
+<script src="scripts/genera.js"></script>
+     <script src="scripts/insta.js"></script>
+          <script src="scripts/ai.js"></script>
+            
+</body>
+</html>
