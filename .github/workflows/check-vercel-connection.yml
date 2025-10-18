@@ -11,29 +11,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # NEW STEP: Unzip static site and find project root
-      - name: Unzip static site and find project root
-        id: unzip_project
-        run: |
-          ZIP_FILE="xbvercel.zip"
-          UNZIP_DIR="vercel_output_temp"
-          mkdir -p "$UNZIP_DIR"
-          unzip "$ZIP_FILE" -d "$UNZIP_DIR"
-
-          # Find the directory containing index.html
-          INDEX_HTML_PATH=$(find "$UNZIP_DIR" -type f -name "index.html" | head -n 1)
-
-          if [ -z "$INDEX_HTML_PATH" ]; then
-            echo "Error: index.html not found within the unzipped content."
-            exit 1
-          fi
-
-          # Get the directory of index.html
-          PROJECT_ROOT_DIR=$(dirname "$INDEX_HTML_PATH")
-          echo "Found index.html at: $INDEX_HTML_PATH"
-          echo "Setting Vercel project root to: $PROJECT_ROOT_DIR"
-          echo "project_root=$PROJECT_ROOT_DIR" >> $GITHUB_OUTPUT
-
       - name: Install Vercel CLI
         run: npm install -g vercel
 
@@ -44,8 +21,7 @@ jobs:
         id: deploy_step
         run: |
           echo "Starting Vercel deployment..."
-          PROJECT_ROOT="${{ steps.unzip_project.outputs.project_root }}"
-          DEPLOY_OUTPUT=$(vercel deploy "$PROJECT_ROOT" --prod --token=${{ secrets.VercelToken }} --yes 2>&1)
+          DEPLOY_OUTPUT=$(vercel deploy --prod --token=${{ secrets.VercelToken }} --yes 2>&1)
           echo "$DEPLOY_OUTPUT" # Log the full Vercel output for debugging
 
           # Extract the unique Vercel deployment URL (e.g., Production: https://...vercel.app)
