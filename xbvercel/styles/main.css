@@ -1,0 +1,548 @@
+ /* --- Root Variables (Light & Dark Theme - Remastered Gen1 Palette) --- */
+        :root {
+            /* Light Theme Palette (if ever needed, focus is dark) */
+            --background-light: #F0F2F5;
+            --surface-light: #FFFFFF;
+            --card-light: #F8F9FA;
+            --text-dark: #333333;
+            --text-muted: #666666;
+            --accent-blue-light: #007BFF;
+            --accent-purple-light: #6F42C1;
+            --border-color-light: #D1D9E6;
+            --button-gradient-start-light: #007BFF;
+            --button-gradient-end-light: #6F42C1;
+            --shadow-color-light: rgba(0, 0, 0, 0.1);
+
+            /* Default (Dark Theme Inspired by GitHub/Modern Dashboards) */
+            --background: #1A1A1A; /* Darker base */
+            --surface: #222222; /* Slightly lighter than background for main areas */
+            --card: #2D2D2D; /* Card background */
+            --text-primary: #E0E0E0; /* Light text for readability */
+            --text-secondary: #A0A0A0; /* Muted text */
+            --border: #444444; /* Subtle borders */
+            --shadow: rgba(0, 0, 0, 0.5); /* Stronger shadow for depth */
+
+            /* Gen1 Specific Colors & Gradients for components (Dark Theme Defaults) */
+            --appbar-gradient: linear-gradient(to right, #00BFFF, #8A2BE2); /* Brighter, more vibrant gradient */
+            --main-accent: #00BFFF; /* Primary highlight color (Deep Sky Blue) */
+            --secondary-accent: #8A2BE2; /* Secondary highlight color (Blue Violet) */
+            --button-primary-gradient: linear-gradient(to right, #00BFFF, #8A2BE2);
+            --button-text-on-gradient: #FFFFFF; /* White text for buttons with gradients */
+
+            /* Component specific colors */
+            --delete-button-bg: #DC3545; /* Red */
+            --delete-button-hover-bg: #C82333;
+            --disabled-bg: #404040;
+            --disabled-text: #707070;
+            --error-color: #FF6B6B; /* Lighter red for errors */
+            --info-color: #6BE56B; /* Lighter green for info */
+            --snackbar-bg: #3A3A3A; /* Dark grey for snackbar background */
+            --snackbar-text: #FFFFFF; /* White text for snackbar */
+            --nav-active-bg: rgba(0, 191, 255, 0.15); /* Subtle background for active nav item */
+            --search-bg: #3A3A3A;
+            --search-text: #E0E0E0;
+            --search-border: #555555;
+            --filter-bg: #3A3A3A;
+            --filter-border: #555555;
+            --filter-text: #E0E0E0;
+            --filter-dropdown-bg: #4A4A4A;
+            --filter-dropdown-hover: #5A5A5A;
+        }
+
+        /* Light theme definition - for toggling, though dark is primary */
+        body.light-theme {
+            --background: var(--background-light);
+            --surface: var(--surface-light);
+            --card: var(--card-light);
+            --text-primary: var(--text-dark);
+            --text-secondary: var(--text-muted);
+            --border: var(--border-color-light);
+            --shadow: var(--shadow-color-light);
+            --appbar-gradient: linear-gradient(to right, var(--button-gradient-start-light), var(--button-gradient-end-light));
+            --main-accent: var(--accent-blue-light);
+            --secondary-accent: var(--accent-purple-light);
+            --button-primary-gradient: linear-gradient(to right, var(--button-gradient-start-light), var(--button-gradient-end-light));
+            --button-text-on-gradient: #FFFFFF;
+            --delete-button-bg: #DC3545;
+            --delete-button-hover-bg: #C82333;
+            --disabled-bg: #E0E0E0;
+            --disabled-text: #A0A0A0;
+            --error-color: #DC3545;
+            --info-color: #28A745;
+            --snackbar-bg: #323232;
+            --snackbar-text: #FFFFFF;
+            --nav-active-bg: rgba(0, 123, 255, 0.1);
+            --search-bg: #EAEAEA;
+            --search-text: #333333;
+            --search-border: #CCCCCC;
+            --filter-bg: #EAEAEA;
+            --filter-border: #CCCCCC;
+            --filter-text: #333333;
+            --filter-dropdown-bg: #FFFFFF;
+            --filter-dropdown-hover: #F0F0F0;
+        }
+
+        /* Helper for RGB values (used for rgba calculations) */
+        :root { --accent-blue-rgb: 0, 191, 255; } /* Dark theme default */
+        body.light-theme { --accent-blue-rgb: 0, 123, 255; }
+
+        /* --- Base Styles --- */
+        html {
+            box-sizing: border-box;
+        }
+        *, *:before, *:after {
+            box-sizing: inherit;
+        }
+
+        body {
+            font-family: 'Roboto', 'Montserrat', sans-serif;
+            background-color: var(--background);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center content horizontally */
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transition: background-color 0.3s ease, color 0.3s ease;
+
+            /* Dark blurred background image */
+            background-image: url('defluat-profile.png'); /* Placeholder, diversified */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.65); /* Darker overlay for better text contrast */
+            backdrop-filter: blur(10px); /* More blur */
+            z-index: -1;
+            transition: background-color 0.3s ease, backdrop-filter 0.3s ease;
+        }
+
+        body.light-theme::before {
+            background-color: rgba(255, 255, 255, 0.65);
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Orbitron', 'Roboto', sans-serif;
+            margin: 0;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        a {
+            color: var(--main-accent);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        a:hover {
+            color: var(--secondary-accent);
+            text-decoration: underline;
+        }
+
+        /* --- Header (similar to well.html header) --- */
+        .main-header {
+            width: 100%;
+            background-color: rgba(34, 34, 34, 0.95); /* More opaque */
+            backdrop-filter: blur(8px); /* More blur */
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            padding: 12px 25px; /* Increased padding */
+            box-shadow: 0 2px 15px var(--shadow); /* Stronger shadow */
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            justify-content: space-between; /* Distribute items */
+        }
+        body.light-theme .main-header {
+            background-color: rgba(255, 255, 255, 0.95);
+        }
+
+        .main-header .back-button { /* Renamed from menu-toggle for Np.html */
+            font-size: 1.5em; /* Slightly larger */
+            cursor: pointer;
+            padding: 10px; /* Increased padding */
+            border-radius: 8px; /* Slightly more rounded */
+            transition: background-color 0.2s ease, color 0.2s ease;
+            color: var(--text-primary);
+            background: none;
+            border: none;
+        }
+        .main-header .back-button:hover {
+            background-color: rgba(0, 191, 255, 0.1); /* Accent hover */
+            color: var(--main-accent);
+        }
+        body.light-theme .main-header .back-button:hover {
+            background-color: rgba(0, 123, 255, 0.1);
+            color: var(--main-accent);
+        }
+
+        .main-header .app-title { /* Renamed from logo for Np.html */
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8em; /* Larger title */
+            font-weight: 700;
+            flex-grow: 1; /* Allows title to center better */
+            text-align: center;
+            color: var(--main-accent);
+            text-shadow: 0 0 8px rgba(0, 191, 255, 0.4);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin: 0 20px; /* Adjust margin to ensure it doesn't overlap back button */
+        }
+        /* Counteract back button pushing title too far right for centering */
+        .main-header .app-title + .header-actions {
+            margin-right: calc(1.5em + 20px + 10px); /* back-button width + padding + margin-left */
+            /* This is a tricky estimation. A flex-grow on the title often centers it if space allows. */
+        }
+
+        .main-header .header-actions {
+            display: flex;
+            gap: 15px; /* Increased gap */
+            align-items: center;
+        }
+
+        .main-header .action-button {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.3em; /* Larger icons */
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 50%;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        .main-header .action-button:hover {
+            background-color: rgba(0, 191, 255, 0.1); /* Accent hover */
+            color: var(--main-accent);
+        }
+        body.light-theme .main-header .action-button:hover {
+            background-color: rgba(0, 123, 255, 0.1);
+            color: var(--main-accent);
+        }
+
+        .theme-switch {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px; /* Larger switch */
+            height: 45px;
+            font-size: 1.3em;
+        }
+        .theme-switch i {
+            color: var(--text-primary);
+        }
+        .theme-switch span {
+            display: none;
+        }
+
+
+        /* --- Container for the Form --- */
+        .form-container {
+            background-color: var(--surface);
+            box-shadow: 0 8px 25px var(--shadow); /* Stronger shadow */
+            border-radius: 15px; /* More rounded */
+            margin: 30px auto; /* Increased margin, auto for centering */
+            padding: 40px; /* Increased padding */
+            box-sizing: border-box;
+            width: 100%;
+            max-width: 900px; /* Wider form container */
+            border: 1px solid var(--border);
+            transition: background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 30px; /* Increased gap between form groups */
+        }
+
+        .section-title {
+            font-size: 2.2em; /* Larger title */
+            font-weight: 700;
+            color: var(--main-accent);
+            font-family: 'Orbitron', sans-serif;
+            text-shadow: 0 0 10px rgba(0, 191, 255, 0.3);
+            margin-bottom: 10px; /* Space below title */
+            text-align: center;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px; /* Increased gap */
+        }
+
+        .form-group label {
+            font-size: 1.15em; /* Slightly larger label */
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .form-group input[type="text"],
+        .form-group textarea { /* Added textarea for README content */
+            padding: 14px 18px; /* More padding */
+            border: 1px solid var(--border);
+            border-radius: 8px; /* More rounded */
+            background-color: var(--card);
+            color: var(--text-primary);
+            font-size: 1em;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2); /* Stronger inset shadow */
+            resize: vertical; /* Allow vertical resizing for textarea */
+            min-height: 100px; /* Min height for README textarea */
+        }
+
+        body.light-theme .form-group input[type="text"],
+        body.light-theme .form-group textarea {
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group textarea:focus {
+            border-color: var(--main-accent);
+            box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.3); /* Stronger focus glow */
+        }
+
+        .github-import-group {
+            display: flex;
+            gap: 15px; /* Increased gap */
+            align-items: center;
+            flex-wrap: wrap; /* Allow wrapping on small screens */
+        }
+
+        .github-import-group input {
+            flex-grow: 1;
+        }
+
+        .github-import-group button {
+            margin-top: 0; /* Override default button margin */
+        }
+
+        /* --- Custom File Upload Area (similar to well.html, enhanced) --- */
+        .file-upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 10px; /* More rounded */
+            padding: 30px; /* More padding */
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+            color: var(--text-secondary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px; /* Increased gap */
+            background-color: var(--card); /* Background for upload area */
+        }
+
+        .file-upload-area:hover {
+            background-color: rgba(0, 191, 255, 0.08); /* Accent hover */
+            border-color: var(--main-accent);
+        }
+
+        .file-upload-area i {
+            font-size: 3em; /* Larger icon */
+            color: var(--main-accent);
+        }
+
+        .file-upload-area p {
+            margin: 0;
+            font-size: 1.05em; /* Slightly larger text */
+            font-weight: 500;
+        }
+
+        #fileInput {
+            display: none; /* Hide default file input */
+        }
+
+        /* --- Image Preview Area --- */
+        #projectImagePreviewContainer {
+            margin-top: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 15px;
+            background-color: var(--card);
+        }
+
+        .image-preview-item {
+            position: relative;
+            width: 150px;
+            height: 100px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+        .image-preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .image-preview-item .remove-image {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: var(--delete-button-bg);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.8em;
+            opacity: 0.8;
+            transition: opacity 0.2s ease, background-color 0.2s ease;
+        }
+        .image-preview-item .remove-image:hover {
+            opacity: 1;
+            background-color: var(--delete-button-hover-bg);
+        }
+        #projectImagePreviewContainer.hidden {
+            display: none;
+        }
+
+
+        /* --- File List (Uploaded Files) --- */
+        .file-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 15px;
+            max-height: 200px; /* Taller list */
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            border-radius: 10px; /* More rounded */
+            background-color: var(--card);
+            box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .file-list li {
+            padding: 10px 20px; /* More padding */
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.95em;
+            color: var(--text-primary);
+        }
+
+        .file-list li:last-child {
+            border-bottom: none;
+        }
+
+        .file-list .remove-file {
+            background: none;
+            border: none;
+            color: var(--delete-button-bg);
+            cursor: pointer;
+            font-size: 1.2em; /* Larger icon */
+            transition: color 0.2s ease, transform 0.2s ease;
+            padding: 5px;
+        }
+
+        .file-list .remove-file:hover {
+            color: var(--delete-button-hover-bg);
+            transform: scale(1.1);
+        }
+
+        .file-list.hidden {
+            display: none;
+        }
+        
+        /* --- Checkbox for README --- */
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            background-color: var(--card);
+            cursor: pointer;
+            position: relative;
+            transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .checkbox-group input[type="checkbox"]:checked {
+            background-color: var(--main-accent);
+            border-color: var(--main-accent);
+            box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.3);
+        }
+
+        .checkbox-group input[type="checkbox"]:checked::after {
+            content: "\f00c"; /* Font Awesome check icon */
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            color: white;
+            font-size: 14px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .checkbox-group label {
+            font-size: 1.1em;
+            font-weight: 500;
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+
+
+        /* --- Action Button (Create Project) --- */
+        .action-button {
+            padding: 15px 30px; /* Larger padding */
+            border: none;
+            border-radius: 10px; /* More rounded */
+            background-image: linear-gradient(to right, var(--button-primary-gradient));
+            background-color: unset; /* Ensure gradient takes precedence */
+            color: white;
+            font-size: 1.2em; /* Larger text */
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+            box-shadow: 0 8px 20px var(--shadow); /* Stronger shadow */
+            margin-top: 20px; /* More space above button */
+        }
+
+        .action-button:hover:not(:disabled) {
+            transform: translateY(-3px); /* Lift more */
+            box-shadow: 0 12px 30px var(--shadow); /* Deeper shadow on hover */
+            opacity: 0.9;
+        }
+
+        .action-button:active:not(:disabled) {
+            transform: translateY(1px); /* Pressed state */
+            box-shadow: 0 4px 10px var(--shadow);
+        }
+
+        .action-button:disabled {
+            background-color: var(--disabled-bg);
+            background-image: none;
+            color: var(--disabled-text);
+            cursor: not-allowed;
+            opacity: 0.6;
+            box-shadow: 0 2px 8px var(--shadow)
